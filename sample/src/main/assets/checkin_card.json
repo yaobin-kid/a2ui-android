@@ -1,0 +1,135 @@
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "demo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": { "primaryColor": "#EF6C00" },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "demo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Card",
+          "child": "checkin-layout",
+          "style": {
+            "background": {
+              "gradientColors": ["#FFFFF3E0", "#FFFFFFFF"],
+              "gradientOrientation": "TL_BR",
+              "cornerRadius": 24
+            },
+            "padding": 20,
+            "elevation": 4
+          }
+        },
+        {
+          "id": "checkin-layout",
+          "component": "Column",
+          "children": ["checkin-title", "checkin-subtitle", "checkin-streak", "checkin-week", "checkin-reward", "checkin-button"]
+        },
+        { "id": "checkin-title", "component": "Text", "text": "每日签到", "variant": "h3" },
+        { "id": "checkin-subtitle", "component": "Text", "text": "坚持记录，让好习惯看得见", "variant": "caption" },
+        {
+          "id": "checkin-streak",
+          "component": "Row",
+          "justify": "center",
+          "align": "center",
+          "children": ["checkin-streak-icon", "checkin-streak-text"],
+          "style": { "padding": [0, 12, 0, 12] }
+        },
+        { "id": "checkin-streak-icon", "component": "Icon", "name": "star" },
+        { "id": "checkin-streak-text", "component": "Text", "text": "连续 12 天", "variant": "h2" },
+        {
+          "id": "checkin-week",
+          "component": "Row",
+          "justify": "stretch",
+          "align": "center",
+          "children": ["checkin-day-1", "checkin-day-2", "checkin-day-3", "checkin-day-4", "checkin-day-5", "checkin-day-6", "checkin-day-7"]
+        },
+        {
+          "id": "checkin-day-1",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-1-label", "checkin-day-1-icon"],
+          "style": { "background": { "color": "#FFFFE0B2", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-1-label", "component": "Text", "text": "一", "variant": "caption" },
+        { "id": "checkin-day-1-icon", "component": "Icon", "name": "check" },
+        {
+          "id": "checkin-day-2",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-2-label", "checkin-day-2-icon"],
+          "style": { "background": { "color": "#FFFFE0B2", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-2-label", "component": "Text", "text": "二", "variant": "caption" },
+        { "id": "checkin-day-2-icon", "component": "Icon", "name": "check" },
+        {
+          "id": "checkin-day-3",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-3-label", "checkin-day-3-icon"],
+          "style": { "background": { "color": "#FFFFE0B2", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-3-label", "component": "Text", "text": "三", "variant": "caption" },
+        { "id": "checkin-day-3-icon", "component": "Icon", "name": "check" },
+        {
+          "id": "checkin-day-4",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-4-label", "checkin-day-4-icon"],
+          "style": { "background": { "color": "#FFFFE0B2", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-4-label", "component": "Text", "text": "四", "variant": "caption" },
+        { "id": "checkin-day-4-icon", "component": "Icon", "name": "check" },
+        {
+          "id": "checkin-day-5",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-5-label", "checkin-day-5-icon"],
+          "style": { "background": { "color": "#FFFFE0B2", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-5-label", "component": "Text", "text": "五", "variant": "caption" },
+        { "id": "checkin-day-5-icon", "component": "Icon", "name": "check" },
+        {
+          "id": "checkin-day-6",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-6-label", "checkin-day-6-icon"],
+          "style": { "background": { "color": "#FFFFF8E1", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-6-label", "component": "Text", "text": "六", "variant": "caption" },
+        { "id": "checkin-day-6-icon", "component": "Icon", "name": "starOff" },
+        {
+          "id": "checkin-day-7",
+          "component": "Column",
+          "align": "center",
+          "children": ["checkin-day-7-label", "checkin-day-7-icon"],
+          "style": { "background": { "color": "#FFFFF8E1", "cornerRadius": 10 }, "padding": 6 }
+        },
+        { "id": "checkin-day-7-label", "component": "Text", "text": "日", "variant": "caption" },
+        { "id": "checkin-day-7-icon", "component": "Icon", "name": "starOff" },
+        {
+          "id": "checkin-reward",
+          "component": "Text",
+          "text": "今日签到可得 20 积分，再签 2 天解锁额外奖励",
+          "variant": "caption",
+          "style": { "padding": [0, 14, 0, 8] }
+        },
+        {
+          "id": "checkin-button",
+          "component": "Button",
+          "variant": "primary",
+          "child": "checkin-button-text",
+          "action": { "event": { "name": "checkin", "context": { "streak": 12, "points": 20 } } }
+        },
+        { "id": "checkin-button-text", "component": "Text", "text": "立即签到" }
+      ]
+    }
+  }
+]

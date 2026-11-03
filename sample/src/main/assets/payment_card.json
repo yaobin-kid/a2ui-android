@@ -1,0 +1,132 @@
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "demo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": { "primaryColor": "#00796B" },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "demo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Card",
+          "child": "payment-layout",
+          "style": {
+            "background": {
+              "gradientColors": ["#FFE0F2F1", "#FFFFFFFF"],
+              "gradientOrientation": "TOP_BOTTOM",
+              "cornerRadius": 24,
+              "strokeWidth": 1,
+              "strokeColor": "#FFB2DFDB"
+            },
+            "padding": 20,
+            "elevation": 4
+          }
+        },
+        {
+          "id": "payment-layout",
+          "component": "Column",
+          "children": ["payment-header", "payment-balance", "payment-updated", "payment-cashflow", "payment-actions-title", "payment-actions", "payment-divider", "payment-transaction"]
+        },
+        {
+          "id": "payment-header",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["payment-title", "payment-account-icon"]
+        },
+        { "id": "payment-title", "component": "Text", "text": "账户余额", "variant": "h4" },
+        { "id": "payment-account-icon", "component": "Icon", "name": "accountCircle" },
+        { "id": "payment-balance", "component": "Text", "text": "¥ 12,680.50", "variant": "h1", "style": { "padding": [0, 10, 0, 0] } },
+        { "id": "payment-updated", "component": "Text", "text": "今日 14:20 已更新", "variant": "caption" },
+        {
+          "id": "payment-cashflow",
+          "component": "Row",
+          "justify": "stretch",
+          "children": ["payment-income", "payment-expense"],
+          "style": { "padding": [0, 12, 0, 12] }
+        },
+        {
+          "id": "payment-income",
+          "component": "Column",
+          "children": ["payment-income-label", "payment-income-value"],
+          "style": { "background": { "color": "#A5FFFFFF", "cornerRadius": 12 }, "padding": 12 }
+        },
+        { "id": "payment-income-label", "component": "Text", "text": "本月收入", "variant": "caption" },
+        { "id": "payment-income-value", "component": "Text", "text": "+ ¥ 8,200", "variant": "h5" },
+        {
+          "id": "payment-expense",
+          "component": "Column",
+          "children": ["payment-expense-label", "payment-expense-value"],
+          "style": { "background": { "color": "#A5FFFFFF", "cornerRadius": 12 }, "padding": 12 }
+        },
+        { "id": "payment-expense-label", "component": "Text", "text": "本月支出", "variant": "caption" },
+        { "id": "payment-expense-value", "component": "Text", "text": "- ¥ 3,460", "variant": "h5" },
+        { "id": "payment-actions-title", "component": "Text", "text": "快捷操作", "variant": "h5" },
+        {
+          "id": "payment-actions",
+          "component": "Row",
+          "justify": "stretch",
+          "align": "center",
+          "children": ["payment-transfer", "payment-scan", "payment-bill"]
+        },
+        {
+          "id": "payment-transfer",
+          "component": "Button",
+          "variant": "borderless",
+          "child": "payment-transfer-content",
+          "action": { "event": { "name": "transfer" } }
+        },
+        { "id": "payment-transfer-content", "component": "Column", "align": "center", "children": ["payment-transfer-icon", "payment-transfer-text"] },
+        { "id": "payment-transfer-icon", "component": "Icon", "name": "send" },
+        { "id": "payment-transfer-text", "component": "Text", "text": "转账", "variant": "caption" },
+        {
+          "id": "payment-scan",
+          "component": "Button",
+          "variant": "borderless",
+          "child": "payment-scan-content",
+          "action": { "event": { "name": "scan" } }
+        },
+        { "id": "payment-scan-content", "component": "Column", "align": "center", "children": ["payment-scan-icon", "payment-scan-text"] },
+        { "id": "payment-scan-icon", "component": "Icon", "name": "camera" },
+        { "id": "payment-scan-text", "component": "Text", "text": "扫一扫", "variant": "caption" },
+        {
+          "id": "payment-bill",
+          "component": "Button",
+          "variant": "borderless",
+          "child": "payment-bill-content",
+          "action": { "event": { "name": "bills" } }
+        },
+        { "id": "payment-bill-content", "component": "Column", "align": "center", "children": ["payment-bill-icon", "payment-bill-text"] },
+        { "id": "payment-bill-icon", "component": "Icon", "name": "payment" },
+        { "id": "payment-bill-text", "component": "Text", "text": "账单", "variant": "caption" },
+        { "id": "payment-divider", "component": "Divider" },
+        {
+          "id": "payment-transaction",
+          "component": "Row",
+          "justify": "spaceBetween",
+          "align": "center",
+          "children": ["payment-transaction-info", "payment-transaction-amount"],
+          "style": { "padding": [0, 10, 0, 0] }
+        },
+        {
+          "id": "payment-transaction-info",
+          "component": "Row",
+          "align": "center",
+          "children": ["payment-transaction-icon", "payment-transaction-text"]
+        },
+        { "id": "payment-transaction-icon", "component": "Icon", "name": "shoppingCart" },
+        { "id": "payment-transaction-text", "component": "Column", "children": ["payment-transaction-name", "payment-transaction-time"] },
+        { "id": "payment-transaction-name", "component": "Text", "text": "最近消费 · 生鲜超市", "variant": "body" },
+        { "id": "payment-transaction-time", "component": "Text", "text": "今天 12:36", "variant": "caption" },
+        { "id": "payment-transaction-amount", "component": "Text", "text": "-¥86.20", "variant": "h5" }
+      ]
+    }
+  }
+]
