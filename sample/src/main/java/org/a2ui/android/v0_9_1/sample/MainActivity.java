@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,11 +29,13 @@ import java.nio.charset.StandardCharsets;
 public class MainActivity extends Activity {
     private static final String TAG = "A2uiSample";
     private static final String[] DEMO_NAMES = {
-            "音乐播放器", "天气卡片", "签到卡片", "日程卡片", "运动卡片", "账户卡片", "综合表单"
+            "音乐播放器", "天气卡片", "签到卡片", "日程卡片", "运动卡片", "账户卡片", "综合表单",
+            "媒体展示", "布局导航", "输入控件", "天气图片背景"
     };
     private static final String[] DEMO_FILES = {
             "music_player.json", "weather_card.json", "checkin_card.json",
-            "schedule_card.json", "fitness_card.json", "payment_card.json", "sample.json"
+            "schedule_card.json", "fitness_card.json", "payment_card.json", "sample.json",
+            "media_showcase.json", "layout_showcase.json", "input_controls.json", "weather_image_card.json"
     };
 
     private static final String[] TRACK_TITLES = {"Night Drive", "Midnight City", "Ocean Eyes"};
@@ -107,6 +110,22 @@ public class MainActivity extends Activity {
         });
         a2uiView.registerComponentTypeStyler("Button",
                 (view, component, context) -> view.setMinimumHeight(dp(44)));
+        a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component, context) -> {
+            FrameLayout card = (FrameLayout) view;
+            ImageView background = new ImageView(this);
+            background.setScaleType(ImageView.ScaleType.FIT_XY);
+            background.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            card.setClipToPadding(false);
+            card.addView(background, 0, params);
+            card.addOnLayoutChangeListener((v, left, top, right, bottom,
+                    oldLeft, oldTop, oldRight, oldBottom) ->
+                    background.layout(0, 0, right - left, bottom - top));
+            String url = component.getAsJsonObject("style")
+                    .getAsJsonObject("background").get("imageUrl").getAsString();
+            context.loadImage(url, background);
+        });
         a2uiView.registerComponentStyler("demo", "music-cover", (view, component, context) -> {
             ImageView cover = (ImageView) view;
             cover.setImageResource(R.drawable.ic_play_arrow);

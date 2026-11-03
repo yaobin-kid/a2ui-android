@@ -1,0 +1,123 @@
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "demo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": { "primaryColor": "#00696D" },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "demo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["media-title", "media-subtitle", "image-card", "icon-card", "video-card", "audio-card"]
+        },
+        { "id": "media-title", "component": "Text", "text": "媒体与展示组件", "variant": "h2" },
+        {
+          "id": "media-subtitle",
+          "component": "Text",
+          "text": "Image、Icon、Video、AudioPlayer、Text 与 Divider",
+          "variant": "caption",
+          "style": { "padding": [0, 4, 0, 8] }
+        },
+        { "id": "image-card", "component": "Card", "child": "image-content" },
+        {
+          "id": "image-content",
+          "component": "Column",
+          "children": ["image-heading", "hero-image", "image-profile", "image-caption"]
+        },
+        { "id": "image-heading", "component": "Text", "text": "Image", "variant": "h4" },
+        {
+          "id": "hero-image",
+          "component": "Image",
+          "url": "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+          "description": "Big Buck Bunny 视频封面",
+          "variant": "header",
+          "fit": "cover",
+          "style": {
+            "background": { "color": "#FFE0E0E0", "cornerRadius": 14 },
+            "padding": [0, 8, 0, 8]
+          }
+        },
+        {
+          "id": "image-profile",
+          "component": "Row",
+          "align": "center",
+          "children": ["avatar-image", "profile-copy"]
+        },
+        {
+          "id": "avatar-image",
+          "component": "Image",
+          "url": "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+          "description": "圆形头像示例",
+          "variant": "avatar",
+          "fit": "cover"
+        },
+        {
+          "id": "profile-copy",
+          "component": "Column",
+          "children": ["profile-title", "profile-subtitle"],
+          "style": { "padding": [12, 0, 0, 0] }
+        },
+        { "id": "profile-title", "component": "Text", "text": "avatar + cover", "variant": "h5" },
+        { "id": "profile-subtitle", "component": "Text", "text": "网络图片、圆形裁剪和内容描述", "variant": "caption" },
+        { "id": "image-caption", "component": "Text", "text": "上方为 header 变体，图片地址可通过数据绑定动态替换。", "variant": "body" },
+        { "id": "icon-card", "component": "Card", "child": "icon-content" },
+        {
+          "id": "icon-content",
+          "component": "Column",
+          "children": ["icon-heading", "icon-description", "icon-divider", "icon-row"]
+        },
+        { "id": "icon-heading", "component": "Text", "text": "Icon + Divider", "variant": "h4" },
+        { "id": "icon-description", "component": "Text", "text": "使用内置 Material 名称映射，自动应用 Surface 主题色。", "variant": "caption" },
+        { "id": "icon-divider", "component": "Divider", "axis": "horizontal", "style": { "padding": [0, 8, 0, 8] } },
+        {
+          "id": "icon-row",
+          "component": "Row",
+          "justify": "spaceAround",
+          "align": "center",
+          "children": ["icon-home", "icon-favorite", "icon-notification", "icon-photo", "icon-settings"]
+        },
+        { "id": "icon-home", "component": "Icon", "name": "home" },
+        { "id": "icon-favorite", "component": "Icon", "name": "favorite" },
+        { "id": "icon-notification", "component": "Icon", "name": "notifications" },
+        { "id": "icon-photo", "component": "Icon", "name": "photo" },
+        { "id": "icon-settings", "component": "Icon", "name": "settings" },
+        { "id": "video-card", "component": "Card", "child": "video-content" },
+        {
+          "id": "video-content",
+          "component": "Column",
+          "children": ["video-heading", "video-caption", "demo-video"]
+        },
+        { "id": "video-heading", "component": "Text", "text": "Video", "variant": "h4" },
+        { "id": "video-caption", "component": "Text", "text": "原生 VideoView + MediaController，点击画面显示播放控制。", "variant": "caption" },
+        {
+          "id": "demo-video",
+          "component": "Video",
+          "url": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+          "accessibility": { "label": "示例视频", "description": "点击后使用系统媒体控制器播放" }
+        },
+        { "id": "audio-card", "component": "Card", "child": "audio-content" },
+        {
+          "id": "audio-content",
+          "component": "Column",
+          "children": ["audio-heading", "audio-caption", "demo-audio"]
+        },
+        { "id": "audio-heading", "component": "Text", "text": "AudioPlayer", "variant": "h4" },
+        { "id": "audio-caption", "component": "Text", "text": "点击播放区域显示系统媒体控制器；播放需要网络连接。", "variant": "caption" },
+        {
+          "id": "demo-audio",
+          "component": "AudioPlayer",
+          "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+          "description": "SoundHelix · Song 1"
+        }
+      ]
+    }
+  }
+]

@@ -2,6 +2,7 @@ package org.a2ui.android.v0_9_1;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.gson.JsonObject;
 
@@ -35,6 +36,11 @@ public final class A2uiRenderContext {
 
     public View renderChild(String componentId) {
         return renderer.render(componentId, this);
+    }
+
+    /** 使用当前 A2uiView 的图片加载器，供自定义渲染器和样式设置器复用。 */
+    public void loadImage(String url, ImageView target) {
+        host.getImageLoader().load(url, target);
     }
 
     public A2uiRenderContext withScope(String newScope) {

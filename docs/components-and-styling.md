@@ -437,3 +437,9 @@ Sample 顶部可切换以下示例：
 | `fitness_card.json` | 步数、运动进度和健康指标。 |
 | `payment_card.json` | 账户余额、收支和快捷操作。 |
 | `sample.json` | 表单、校验、输入绑定和动态商品卡片。 |
+| `weather_image_card.json` | 天气卡片副本，通过私有 Styler 和 `context.loadImage` 实现整卡网络图片背景。 |
+| `media_showcase.json` | Image、Icon、Video、AudioPlayer、Text 和 Divider。 |
+| `layout_showcase.json` | Row、Column、List、Card、Tabs、Modal 和 Divider。 |
+| `input_controls.json` | TextField、CheckBox、ChoicePicker、Slider、DateTimeInput 和 Button 的主要变体。 |
+
+媒体展示、布局导航和输入控件三个组件示例合起来覆盖 Basic Catalog 全部 18 类组件。

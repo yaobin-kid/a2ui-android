@@ -236,6 +236,12 @@ a2uiView.registerComponentStyler("music-play", styler);
 - `component`：当前组件的原始 JSON。
 - `context`：可获取 Surface、数据作用域、Android Context，或解析动态值。
 
+### 4.4 在自定义 Styler 中加载网络图片
+
+自定义渲染器或 Styler 可以通过 `context.loadImage(url, imageView)` 复用当前 `A2uiView` 的图片加载器，无需重复实现网络请求和缓存。
+
+Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `weather-photo-card` 注册私有 Styler，将背景 `ImageView` 放在内容下层，并使用 `ImageView.ScaleType.FIT_XY` 按卡片宽高拉伸填满。完整实现见 `sample/src/main/java/org/a2ui/android/v0_9_1/sample/MainActivity.java`。
+
 ## 5. JSON 样式扩展
 
 `style` 是本库为所有组件提供的扩展属性，尺寸单位为 dp：
@@ -297,7 +303,7 @@ a2uiView.registerComponentStyler("music-play", styler);
 
 支持动态值的属性可以使用 `{ "path": "/user/name" }`；动态列表使用 `{ "path": "/items", "componentId": "item" }`。
 
-## 7. 七个 Demo 效果图
+## 7. 业务 Demo 效果图
 
 <table>
   <tr>
@@ -329,6 +335,12 @@ a2uiView.registerComponentStyler("music-play", styler);
 | `fitness_card.json` | 步数、进度、运动指标 |
 | `payment_card.json` | 余额、收支、快捷操作 |
 | `sample.json` | 输入绑定、校验、动态商品列表 |
+| `weather_image_card.json` | 天气卡片副本，通过私有 Styler 和 `FIT_XY` 使用整卡拉伸图片背景 |
+| `media_showcase.json` | Image、Icon、Video、AudioPlayer 等媒体组件 |
+| `layout_showcase.json` | Row、Column、List、Card、Tabs、Modal、Divider |
+| `input_controls.json` | TextField 四种变体、ChoicePicker、Slider、CheckBox、DateTimeInput 和 Button |
+
+Sample 共提供十一个可切换示例，新增三个组件示例合起来覆盖 Basic Catalog 全部 18 类组件。
 
 ## 8. 构建与发布
 
@@ -363,7 +375,7 @@ git push origin v0.9.1
 a2ui/                 A2UI Android 库
   src/main/java/      协议、数据绑定、渲染器、样式 API
   src/test/java/      JVM 与 Robolectric 测试
-sample/               七个可切换示例
+sample/               十一个可切换示例
   src/main/assets/    A2UI JSON
   src/main/res/       Sample 矢量图标
 docs/                 详细组件文档与真机效果图

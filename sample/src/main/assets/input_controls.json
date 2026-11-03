@@ -1,0 +1,225 @@
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "demo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": { "primaryColor": "#3F51B5" },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "demo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["input-title", "input-subtitle", "text-card", "choice-card", "date-card", "action-card"]
+        },
+        { "id": "input-title", "component": "Text", "text": "输入与选择组件", "variant": "h2" },
+        {
+          "id": "input-subtitle",
+          "component": "Text",
+          "text": "修改控件会写回数据模型，点击提交可查看 Action context",
+          "variant": "caption",
+          "style": { "padding": [0, 4, 0, 8] }
+        },
+        { "id": "text-card", "component": "Card", "child": "text-content" },
+        {
+          "id": "text-content",
+          "component": "Column",
+          "children": ["text-heading", "name-field", "note-field", "number-row", "form-divider", "password-field"]
+        },
+        { "id": "text-heading", "component": "Text", "text": "TextField 四种变体", "variant": "h4" },
+        {
+          "id": "name-field",
+          "component": "TextField",
+          "label": "shortText · 姓名（2～20 个字符）",
+          "value": { "path": "/form/name" },
+          "variant": "shortText",
+          "validationRegexp": ".{2,20}"
+        },
+        {
+          "id": "note-field",
+          "component": "TextField",
+          "label": "longText · 备注",
+          "value": { "path": "/form/note" },
+          "variant": "longText"
+        },
+        {
+          "id": "number-row",
+          "component": "Row",
+          "children": ["number-field"],
+          "align": "stretch"
+        },
+        {
+          "id": "number-field",
+          "component": "TextField",
+          "label": "number · 人数",
+          "value": { "path": "/form/guests" },
+          "variant": "number"
+        },
+        { "id": "form-divider", "component": "Divider", "axis": "horizontal" },
+        {
+          "id": "password-field",
+          "component": "TextField",
+          "label": "obscured · 密码",
+          "value": { "path": "/form/password" },
+          "variant": "obscured"
+        },
+        { "id": "choice-card", "component": "Card", "child": "choice-content" },
+        {
+          "id": "choice-content",
+          "component": "Column",
+          "children": ["choice-heading", "platform-picker", "interest-picker", "volume-slider", "agreement-checkbox"]
+        },
+        { "id": "choice-heading", "component": "Text", "text": "ChoicePicker + Slider + CheckBox", "variant": "h4" },
+        {
+          "id": "platform-picker",
+          "component": "ChoicePicker",
+          "label": "单选 · mutuallyExclusive / checkbox",
+          "variant": "mutuallyExclusive",
+          "displayStyle": "checkbox",
+          "options": [
+            { "label": "Android", "value": "android" },
+            { "label": "iOS", "value": "ios" },
+            { "label": "Web", "value": "web" }
+          ],
+          "value": { "path": "/form/platform" }
+        },
+        {
+          "id": "interest-picker",
+          "component": "ChoicePicker",
+          "label": "多选 · multipleSelection / chips / filterable",
+          "variant": "multipleSelection",
+          "displayStyle": "chips",
+          "filterable": true,
+          "options": [
+            { "label": "声明式 UI", "value": "declarative" },
+            { "label": "数据绑定", "value": "binding" },
+            { "label": "原生渲染", "value": "native" },
+            { "label": "样式系统", "value": "style" }
+          ],
+          "value": { "path": "/form/interests" }
+        },
+        {
+          "id": "volume-slider",
+          "component": "Slider",
+          "label": "Slider · 完成度",
+          "min": 0,
+          "max": 100,
+          "value": { "path": "/form/progress" }
+        },
+        {
+          "id": "agreement-checkbox",
+          "component": "CheckBox",
+          "label": "CheckBox · 同意在提交时附带以上数据",
+          "value": { "path": "/form/agreed" },
+          "checks": [
+            { "condition": { "path": "/form/agreed" }, "message": "请先勾选此项" }
+          ]
+        },
+        { "id": "date-card", "component": "Card", "child": "date-content" },
+        {
+          "id": "date-content",
+          "component": "Column",
+          "children": ["date-heading", "date-time-field", "time-field"]
+        },
+        { "id": "date-heading", "component": "Text", "text": "DateTimeInput", "variant": "h4" },
+        {
+          "id": "date-time-field",
+          "component": "DateTimeInput",
+          "label": "日期和时间 · 2026 年内",
+          "value": { "path": "/form/appointment" },
+          "enableDate": true,
+          "enableTime": true,
+          "min": "2026-01-01",
+          "max": "2026-12-31"
+        },
+        {
+          "id": "time-field",
+          "component": "DateTimeInput",
+          "label": "仅时间",
+          "value": { "path": "/form/reminder" },
+          "enableDate": false,
+          "enableTime": true
+        },
+        { "id": "action-card", "component": "Card", "child": "action-content" },
+        {
+          "id": "action-content",
+          "component": "Column",
+          "children": ["action-heading", "action-caption", "submit-button", "secondary-actions"]
+        },
+        { "id": "action-heading", "component": "Text", "text": "Button 三种变体", "variant": "h4" },
+        { "id": "action-caption", "component": "Text", "text": "提交后，Toast 会显示实时解析的 Action context。", "variant": "caption" },
+        {
+          "id": "submit-button",
+          "component": "Button",
+          "variant": "primary",
+          "child": "submit-text",
+          "action": {
+            "event": {
+              "name": "submitInputShowcase",
+              "context": {
+                "name": { "path": "/form/name" },
+                "note": { "path": "/form/note" },
+                "guests": { "path": "/form/guests" },
+                "platform": { "path": "/form/platform" },
+                "interests": { "path": "/form/interests" },
+                "progress": { "path": "/form/progress" },
+                "agreed": { "path": "/form/agreed" },
+                "appointment": { "path": "/form/appointment" },
+                "reminder": { "path": "/form/reminder" }
+              }
+            }
+          }
+        },
+        { "id": "submit-text", "component": "Text", "text": "提交并查看数据" },
+        {
+          "id": "secondary-actions",
+          "component": "Row",
+          "justify": "spaceAround",
+          "children": ["default-button", "borderless-button"]
+        },
+        {
+          "id": "default-button",
+          "component": "Button",
+          "variant": "default",
+          "child": "default-button-text",
+          "action": { "event": { "name": "defaultButtonClicked", "context": { "variant": "default" } } }
+        },
+        { "id": "default-button-text", "component": "Text", "text": "默认按钮" },
+        {
+          "id": "borderless-button",
+          "component": "Button",
+          "variant": "borderless",
+          "child": "borderless-button-text",
+          "action": { "event": { "name": "borderlessButtonClicked", "context": { "variant": "borderless" } } }
+        },
+        { "id": "borderless-button-text", "component": "Text", "text": "无边框按钮" }
+      ]
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateDataModel": {
+      "surfaceId": "demo",
+      "value": {
+        "form": {
+          "name": "Ada",
+          "note": "通过 A2UI JSON 渲染原生输入控件。",
+          "guests": "2",
+          "password": "123456",
+          "platform": ["android"],
+          "interests": ["declarative", "binding"],
+          "progress": 65,
+          "agreed": true,
+          "appointment": "2026-11-03T10:30:00",
+          "reminder": "18:30:00"
+        }
+      }
+    }
+  }
+]

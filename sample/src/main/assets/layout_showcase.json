@@ -1,0 +1,196 @@
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "demo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": { "primaryColor": "#6750A4" },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "demo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["layout-title", "layout-subtitle", "row-card", "list-card", "tabs-card", "modal-card"]
+        },
+        { "id": "layout-title", "component": "Text", "text": "布局与导航组件", "variant": "h2" },
+        {
+          "id": "layout-subtitle",
+          "component": "Text",
+          "text": "Row、Column、List、Card、Tabs、Modal 与 Divider",
+          "variant": "caption",
+          "style": { "padding": [0, 4, 0, 8] }
+        },
+        { "id": "row-card", "component": "Card", "child": "row-content" },
+        {
+          "id": "row-content",
+          "component": "Column",
+          "children": ["row-heading", "row-caption", "feature-row", "row-divider", "row-footnote"]
+        },
+        { "id": "row-heading", "component": "Text", "text": "Row + Column", "variant": "h4" },
+        { "id": "row-caption", "component": "Text", "text": "justify=spaceAround，align=center", "variant": "caption" },
+        {
+          "id": "feature-row",
+          "component": "Row",
+          "justify": "spaceAround",
+          "align": "center",
+          "children": ["feature-declarative", "feature-native", "feature-binding"]
+        },
+        {
+          "id": "feature-declarative",
+          "component": "Column",
+          "align": "center",
+          "children": ["feature-declarative-icon", "feature-declarative-text"]
+        },
+        { "id": "feature-declarative-icon", "component": "Icon", "name": "menu" },
+        { "id": "feature-declarative-text", "component": "Text", "text": "声明式", "variant": "caption" },
+        {
+          "id": "feature-native",
+          "component": "Column",
+          "align": "center",
+          "children": ["feature-native-icon", "feature-native-text"]
+        },
+        { "id": "feature-native-icon", "component": "Icon", "name": "phone" },
+        { "id": "feature-native-text", "component": "Text", "text": "原生 View", "variant": "caption" },
+        {
+          "id": "feature-binding",
+          "component": "Column",
+          "align": "center",
+          "children": ["feature-binding-icon", "feature-binding-text"]
+        },
+        { "id": "feature-binding-icon", "component": "Icon", "name": "refresh" },
+        { "id": "feature-binding-text", "component": "Text", "text": "数据绑定", "variant": "caption" },
+        { "id": "row-divider", "component": "Divider", "axis": "horizontal", "style": { "padding": [0, 12, 0, 4] } },
+        { "id": "row-footnote", "component": "Text", "text": "子组件通过 ID 引用组合，而不是嵌套 JSON 对象。", "variant": "body" },
+        { "id": "list-card", "component": "Card", "child": "list-content" },
+        {
+          "id": "list-content",
+          "component": "Column",
+          "children": ["list-heading", "list-caption", "destination-list"]
+        },
+        { "id": "list-heading", "component": "Text", "text": "横向 List", "variant": "h4" },
+        { "id": "list-caption", "component": "Text", "text": "左右滑动查看卡片；direction=horizontal", "variant": "caption" },
+        {
+          "id": "destination-list",
+          "component": "List",
+          "direction": "horizontal",
+          "children": ["destination-shanghai", "destination-hangzhou", "destination-shenzhen"]
+        },
+        {
+          "id": "destination-shanghai",
+          "component": "Card",
+          "child": "shanghai-content",
+          "style": { "background": { "color": "#FFF3E5F5", "cornerRadius": 14 }, "elevation": 0 }
+        },
+        {
+          "id": "shanghai-content",
+          "component": "Column",
+          "children": ["shanghai-icon", "shanghai-title", "shanghai-copy"]
+        },
+        { "id": "shanghai-icon", "component": "Icon", "name": "locationOn" },
+        { "id": "shanghai-title", "component": "Text", "text": "上海", "variant": "h5" },
+        { "id": "shanghai-copy", "component": "Text", "text": "城市漫步\n3 个日程", "variant": "caption" },
+        {
+          "id": "destination-hangzhou",
+          "component": "Card",
+          "child": "hangzhou-content",
+          "style": { "background": { "color": "#FFE8F5E9", "cornerRadius": 14 }, "elevation": 0 }
+        },
+        {
+          "id": "hangzhou-content",
+          "component": "Column",
+          "children": ["hangzhou-icon", "hangzhou-title", "hangzhou-copy"]
+        },
+        { "id": "hangzhou-icon", "component": "Icon", "name": "photo" },
+        { "id": "hangzhou-title", "component": "Text", "text": "杭州", "variant": "h5" },
+        { "id": "hangzhou-copy", "component": "Text", "text": "西湖骑行\n12 张照片", "variant": "caption" },
+        {
+          "id": "destination-shenzhen",
+          "component": "Card",
+          "child": "shenzhen-content",
+          "style": { "background": { "color": "#FFE3F2FD", "cornerRadius": 14 }, "elevation": 0 }
+        },
+        {
+          "id": "shenzhen-content",
+          "component": "Column",
+          "children": ["shenzhen-icon", "shenzhen-title", "shenzhen-copy"]
+        },
+        { "id": "shenzhen-icon", "component": "Icon", "name": "event" },
+        { "id": "shenzhen-title", "component": "Text", "text": "深圳", "variant": "h5" },
+        { "id": "shenzhen-copy", "component": "Text", "text": "滨海旅行\n2 个待办", "variant": "caption" },
+        { "id": "tabs-card", "component": "Card", "child": "tabs-content" },
+        {
+          "id": "tabs-content",
+          "component": "Column",
+          "children": ["tabs-heading", "library-tabs"]
+        },
+        { "id": "tabs-heading", "component": "Text", "text": "Tabs", "variant": "h4" },
+        {
+          "id": "library-tabs",
+          "component": "Tabs",
+          "tabs": [
+            { "title": "概览", "child": "tab-overview" },
+            { "title": "收藏", "child": "tab-favorites" },
+            { "title": "设置", "child": "tab-settings" }
+          ]
+        },
+        {
+          "id": "tab-overview",
+          "component": "Column",
+          "children": ["tab-overview-icon", "tab-overview-title", "tab-overview-copy"]
+        },
+        { "id": "tab-overview-icon", "component": "Icon", "name": "info" },
+        { "id": "tab-overview-title", "component": "Text", "text": "组件内容按需切换", "variant": "h5" },
+        { "id": "tab-overview-copy", "component": "Text", "text": "每个标签通过 child 引用一棵独立组件树。", "variant": "body" },
+        {
+          "id": "tab-favorites",
+          "component": "Column",
+          "children": ["tab-favorites-icon", "tab-favorites-title", "tab-favorites-copy"]
+        },
+        { "id": "tab-favorites-icon", "component": "Icon", "name": "favorite" },
+        { "id": "tab-favorites-title", "component": "Text", "text": "收藏内容", "variant": "h5" },
+        { "id": "tab-favorites-copy", "component": "Text", "text": "这里可以放置文本、表单或任意布局。", "variant": "body" },
+        {
+          "id": "tab-settings",
+          "component": "Column",
+          "children": ["tab-settings-icon", "tab-settings-title", "tab-settings-copy"]
+        },
+        { "id": "tab-settings-icon", "component": "Icon", "name": "settings" },
+        { "id": "tab-settings-title", "component": "Text", "text": "设置面板", "variant": "h5" },
+        { "id": "tab-settings-copy", "component": "Text", "text": "选中的标签会使用主题色和粗体。", "variant": "body" },
+        { "id": "modal-card", "component": "Card", "child": "modal-content" },
+        {
+          "id": "modal-content",
+          "component": "Column",
+          "children": ["modal-heading", "modal-caption", "demo-modal"]
+        },
+        { "id": "modal-heading", "component": "Text", "text": "Modal + Button", "variant": "h4" },
+        { "id": "modal-caption", "component": "Text", "text": "点击触发组件，在 AlertDialog 中渲染 content。", "variant": "caption" },
+        { "id": "demo-modal", "component": "Modal", "trigger": "open-modal", "content": "dialog-content" },
+        {
+          "id": "open-modal",
+          "component": "Button",
+          "variant": "primary",
+          "child": "open-modal-text",
+          "style": { "padding": [0, 12, 0, 0] }
+        },
+        { "id": "open-modal-text", "component": "Text", "text": "打开组件弹窗" },
+        {
+          "id": "dialog-content",
+          "component": "Column",
+          "align": "center",
+          "children": ["dialog-icon", "dialog-title", "dialog-copy"],
+          "style": { "padding": 24 }
+        },
+        { "id": "dialog-icon", "component": "Icon", "name": "check" },
+        { "id": "dialog-title", "component": "Text", "text": "A2UI Modal", "variant": "h3" },
+        { "id": "dialog-copy", "component": "Text", "text": "弹窗内容同样由 JSON 组件树渲染。", "variant": "body" }
+      ]
+    }
+  }
+]
