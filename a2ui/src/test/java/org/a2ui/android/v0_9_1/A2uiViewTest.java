@@ -1,9 +1,12 @@
 package org.a2ui.android.v0_9_1;
 
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.a2ui.android.v0_9_1.core.A2uiAction;
@@ -100,6 +103,29 @@ public class A2uiViewTest {
         assertEquals(Math.round(4 * density), content.getPaddingBottom());
         assertEquals(5 * density, content.getElevation(), 0.01f);
         assertEquals(0.5f, content.getAlpha(), 0.01f);
+    }
+
+    @Test
+    public void appliesSurfacePrimaryColorToNativeInputs() {
+        A2uiView view = new A2uiView(RuntimeEnvironment.getApplication());
+        view.render("{\"version\":\"v0.9.1\",\"createSurface\":{\"surfaceId\":\"main\",\"catalogId\":\"basic\","
+                + "\"theme\":{\"primaryColor\":\"#112233\"}}}"
+                + "\n{\"version\":\"v0.9.1\",\"updateComponents\":{\"surfaceId\":\"main\",\"components\":["
+                + "{\"id\":\"root\",\"component\":\"Column\",\"children\":[\"input\",\"check\",\"slider\"]},"
+                + "{\"id\":\"input\",\"component\":\"TextField\",\"label\":\"Name\",\"value\":\"\"},"
+                + "{\"id\":\"check\",\"component\":\"CheckBox\",\"label\":\"Enabled\",\"value\":true},"
+                + "{\"id\":\"slider\",\"component\":\"Slider\",\"label\":\"Volume\",\"min\":0,\"max\":100,\"value\":25}]}}");
+
+        int primary = Color.rgb(17, 34, 51);
+        EditText input = find(view, EditText.class);
+        CheckBox check = find(view, CheckBox.class);
+        SeekBar slider = find(view, SeekBar.class);
+        assertEquals(primary, input.getBackgroundTintList().getColorForState(
+                new int[]{android.R.attr.state_focused}, Color.BLACK));
+        assertEquals(primary, check.getButtonTintList().getColorForState(
+                new int[]{android.R.attr.state_checked}, Color.BLACK));
+        assertEquals(primary, slider.getProgressTintList().getDefaultColor());
+        assertEquals(primary, slider.getThumbTintList().getDefaultColor());
     }
 
     @Test

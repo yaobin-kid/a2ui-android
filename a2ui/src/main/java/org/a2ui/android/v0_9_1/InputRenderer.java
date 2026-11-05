@@ -2,6 +2,7 @@ package org.a2ui.android.v0_9_1;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
@@ -62,6 +63,7 @@ final class InputRenderer {
         TextView label = label(context, BasicCatalogRenderer.string(context, component.get("label"), ""));
         container.addView(label);
         EditText input = new EditText(context.getContext());
+        input.setBackgroundTintList(editTextTint(context));
         input.setText(BasicCatalogRenderer.string(context, component.get("value"), ""));
         input.setSingleLine(true);
         switch (BasicCatalogRenderer.optString(component, "variant", "shortText")) {
@@ -108,6 +110,7 @@ final class InputRenderer {
 
     private View checkBox(A2uiRenderContext context, JsonObject component) {
         CheckBox checkBox = new CheckBox(context.getContext());
+        checkBox.setButtonTintList(controlTint(context));
         checkBox.setText(BasicCatalogRenderer.string(context, component.get("label"), ""));
         checkBox.setChecked(BasicCatalogRenderer.bool(context, component.get("value"), false));
         checkBox.setOnCheckedChangeListener((button, checked) -> {
@@ -170,6 +173,9 @@ final class InputRenderer {
             } else {
                 optionView = new RadioButton(context.getContext());
             }
+            if (!chips) {
+                optionView.setButtonTintList(controlTint(context));
+            }
             optionView.setText(optionLabel);
             optionView.setChecked(selected.contains(optionValue));
             optionView.setOnCheckedChangeListener((button, checked) -> {
@@ -218,6 +224,11 @@ final class InputRenderer {
         double max = BasicCatalogRenderer.number(context, component.get("max"), 100);
         double value = BasicCatalogRenderer.number(context, component.get("value"), min);
         SeekBar seekBar = new SeekBar(context.getContext());
+        int primary = BasicCatalogRenderer.primaryColor(context);
+        seekBar.setProgressTintList(ColorStateList.valueOf(primary));
+        seekBar.setProgressBackgroundTintList(ColorStateList.valueOf(
+                Color.argb(60, Color.red(primary), Color.green(primary), Color.blue(primary))));
+        seekBar.setThumbTintList(ColorStateList.valueOf(primary));
         seekBar.setMax(1000);
         seekBar.setProgress((int) Math.round(Math.max(0, Math.min(1, (value - min) / (max - min))) * 1000));
         TextView current = new TextView(context.getContext());
@@ -255,6 +266,7 @@ final class InputRenderer {
             container.addView(label(context, labelText));
         }
         EditText input = new EditText(context.getContext());
+        input.setBackgroundTintList(ColorStateList.valueOf(BasicCatalogRenderer.primaryColor(context)));
         input.setFocusable(false);
         input.setClickable(true);
         input.setText(BasicCatalogRenderer.string(context, component.get("value"), ""));
@@ -349,6 +361,19 @@ final class InputRenderer {
         label.setTextColor(Color.rgb(80, 80, 80));
         label.setTextSize(14);
         return label;
+    }
+
+    private static ColorStateList controlTint(A2uiRenderContext context) {
+        int primary = BasicCatalogRenderer.primaryColor(context);
+        return new ColorStateList(
+                new int[][]{{android.R.attr.state_checked}, {}},
+                new int[]{primary, Color.rgb(158, 158, 158)});
+    }
+
+    private static ColorStateList editTextTint(A2uiRenderContext context) {
+        return new ColorStateList(
+                new int[][]{{android.R.attr.state_focused}, {}},
+                new int[]{BasicCatalogRenderer.primaryColor(context), Color.rgb(158, 158, 158)});
     }
 
     private static android.graphics.drawable.Drawable selectableBackground(A2uiRenderContext context) {

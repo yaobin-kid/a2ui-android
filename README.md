@@ -61,7 +61,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.yaobin-kid:a2ui-android:v0.9.1'
+    implementation 'com.github.yaobin-kid:a2ui-android:v0.9.2'
 }
 ```
 
@@ -142,6 +142,8 @@ public class MainActivity extends Activity {
 ```
 
 根组件 ID 必须为 `root`。组件通过 ID 引用，例如 `Card.child = "content"`。
+
+`createSurface.theme.primaryColor` 是 A2UI v0.9.1 的主题字段，使用 `#RRGGBB` 或 `#AARRGGBB` 颜色值。它应用于 Icon、Button、Tabs，以及 TextField 聚焦边框、CheckBox/ChoicePicker 选中状态、Slider 进度与滑块、DateTimeInput 边框；未设置时使用默认靛蓝色 `#3F51B5`。
 
 ### 3.3 更新数据
 
@@ -363,8 +365,8 @@ Sample 共提供十一个可切换示例，新增三个组件示例合起来覆�
 发布 JitPack 时，将包含 `jitpack.yml` 和 `maven-publish` 配置的代码推送到 GitHub，再创建版本标签：
 
 ```bash
-git tag -a v0.9.1 -m "A2UI v0.9.1 Android renderer"
-git push origin v0.9.1
+git tag -a v0.9.2 -m "Android renderer v0.9.2 (A2UI v0.9.1)"
+git push origin v0.9.2
 ```
 
 随后可在 [JitPack 构建页面](https://jitpack.io/#yaobin-kid/a2ui-android) 查看版本构建状态。

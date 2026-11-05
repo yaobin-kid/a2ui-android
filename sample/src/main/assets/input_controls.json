@@ -4,7 +4,7 @@
     "createSurface": {
       "surfaceId": "demo",
       "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
-      "theme": { "primaryColor": "#3F51B5" },
+      "theme": { "primaryColor": "#D81B60" },
       "sendDataModel": true
     }
   },
@@ -22,7 +22,7 @@
         {
           "id": "input-subtitle",
           "component": "Text",
-          "text": "修改控件会写回数据模型，点击提交可查看 Action context",
+          "text": "主题色来自 createSurface.theme.primaryColor；修改控件会写回数据模型",
           "variant": "caption",
           "style": { "padding": [0, 4, 0, 8] }
         },

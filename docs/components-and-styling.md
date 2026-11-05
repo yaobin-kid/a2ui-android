@@ -12,7 +12,7 @@ a2uiView.render(json);
 
 `render` 接受一条 JSON 消息、JSON 消息数组或 JSONL。一个可显示的 Surface 至少需要：
 
-1. `createSurface`：创建 Surface，可同时设置 `theme.primaryColor`。
+1. `createSurface`：创建 Surface，可通过 `theme.primaryColor` 设置主题色；该颜色应用于图标、按钮、Tabs、输入框聚焦边框、选择控件选中状态和 Slider 高亮。
 2. `updateComponents`：提供组件树，根组件 ID 必须为 `root`。
 3. `updateDataModel`：可选，提供绑定数据。
 
