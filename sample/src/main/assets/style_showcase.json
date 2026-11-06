@@ -22,6 +22,7 @@
           "align": "start",
           "children": [
             "header",
+            "standalone-text-color-test",
             "solid-block",
             "gradient-block",
             "card-1",
@@ -38,6 +39,17 @@
           "component": "Text",
           "text": "JSON style 客户端扩展",
           "variant": "h3"
+        },
+        {
+          "id": "standalone-text-color-test",
+          "component": "Text",
+          "text": "文字x按钮 textColor=#FF001E63  textSize=26",
+          "variant": "body",
+          "style": {
+            "textSize": 26,
+            "textColor": "#FF001E63",
+            "padding": [8, 8, 8, 8]
+          }
         },
         {
           "id": "solid-block",

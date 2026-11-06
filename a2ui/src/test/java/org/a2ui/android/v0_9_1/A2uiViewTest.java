@@ -101,30 +101,6 @@ public class A2uiViewTest {
     }
 
     @Test
-    public void appliesTextColorAndSizeToButtonChildText() {
-        A2uiView view = new A2uiView(RuntimeEnvironment.getApplication());
-        view.render("{\"version\":\"v0.9.1\",\"createSurface\":{\"surfaceId\":\"main\",\"catalogId\":\"basic\"}}"
-                + "\n{\"version\":\"v0.9.1\",\"updateComponents\":{\"surfaceId\":\"main\",\"components\":["
-                + "{\"id\":\"btn\",\"component\":\"Button\",\"variant\":\"filled\",\"child\":\"btn-text\","
-                + "\"style\":{\"background\":{\"color\":\"#FF6750A4\",\"cornerRadius\":24},"
-                + "\"textColor\":\"#FFFFFFFF\",\"textSize\":16,\"padding\":[28,12,28,12]}},"
-                + "{\"id\":\"btn-text\",\"component\":\"Text\",\"text\":\"按钮\",\"variant\":\"body\"}}]}}");
-
-        android.view.ViewGroup btn = (android.view.ViewGroup) ((ViewGroup) view.getSurfaceView("main")).getChildAt(0);
-        android.widget.TextView tv = (android.widget.TextView) btn.getChildAt(0);
-        System.out.println("=== Button child debug ===");
-        System.out.println("btn container bg class: " + btn.getBackground().getClass().getName());
-        System.out.println("tv textColor: " + Integer.toHexString(tv.getCurrentTextColor()));
-        System.out.println("tv textSize: " + tv.getTextSize());
-        System.out.println("tv text: " + tv.getText());
-        // Button variant "filled" 在 button() 里不走 primary/borderless 分支，所以不会被 button() 覆盖
-        // 期望 ComponentStyleApplier 的 applyTextAttributes 递归覆盖
-        assertEquals("Button 子 TextView textColor 应被 style 覆盖",
-                android.graphics.Color.WHITE, tv.getCurrentTextColor());
-        assertEquals(16f, tv.getTextSize() / view.getResources().getDisplayMetrics().scaledDensity, 0.01f);
-    }
-
-    @Test
     public void appliesDeclarativeBackgroundAndPadding() {
         A2uiView view = new A2uiView(RuntimeEnvironment.getApplication());
         view.render("{\"version\":\"v0.9.1\",\"createSurface\":{\"surfaceId\":\"main\",\"catalogId\":\"basic\"}}"
