@@ -37,19 +37,15 @@ final class ComponentStyleApplier {
             return; // 协议兼容：未知/非法字段静默忽略
         }
         JsonObject style = value.getAsJsonObject();
-        // 每个步骤独立 try/catch：一个步骤失败不影响其他步骤
-        try { applyBackground(context, style, view); } catch (Exception ignored) {}
-        try { applyPadding(context, style, view); } catch (Exception ignored) {}
-        try {
-            if (style.has("elevation")) view.setElevation(dp(context, style.get("elevation")));
-        } catch (Exception ignored) {}
-        try {
-            if (style.has("alpha")) {
-                float alpha = style.get("alpha").getAsFloat();
-                if (alpha >= 0f && alpha <= 1f) view.setAlpha(alpha);
-            }
-        } catch (Exception ignored) {}
-        try { applyTextAttributes(context, style, view); } catch (Exception ignored) {}
+        // DEBUG: 先不 try/catch，看真实异常
+        applyBackground(context, style, view);
+        applyPadding(context, style, view);
+        if (style.has("elevation")) view.setElevation(dp(context, style.get("elevation")));
+        if (style.has("alpha")) {
+            float alpha = style.get("alpha").getAsFloat();
+            if (alpha >= 0f && alpha <= 1f) view.setAlpha(alpha);
+        }
+        applyTextAttributes(context, style, view);
     }
 
     private static void applyBackground(A2uiRenderContext context, JsonObject style, View view) {
