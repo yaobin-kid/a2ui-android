@@ -61,7 +61,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.yaobin-kid:a2ui-android:v0.9.2'
+    implementation 'com.github.yaobin-kid:a2ui-android:v0.9.4'
 }
 ```
 
@@ -293,11 +293,264 @@ JSON 中调用：
 { "functionCall": { "call": "greet", "args": { "name": "#/user/name" } } }
 ```
 
-## 4. registerComponentStyler 使用方法
+## 4. 数据绑定（Data Model Binding）
+
+每个 Surface 内部维护一个 JSON 对象 `dataModel`。组件的**支持动态值的属性**可以通过 `{ "path": "..." }` 绑定到 dataModel 的某个字段；当 `updateDataModel` 更新该字段时，所有绑定它的组件会自动重新渲染。
+
+### 4.1 path 的定义：RFC 6901 JSON Pointer
+
+`path` 遵循 [RFC 6901 JSON Pointer](https://tools.ietf.org/html/rfc6901) 语法：
+
+| 写法 | 含义 |
+| --- | --- |
+| `""` 或 `"/"` | 整个 dataModel 根对象 |
+| `"/message"` | 根对象的 `message` 字段 |
+| `"/user/name"` | `user` 对象下的 `name` 字段 |
+| `"/items/0/title"` | 数组 `items` 第 0 项的 `title` |
+| `"/items/-/title"` | 数组末尾追加项的 `title`（仅 set 时） |
+
+**转义规则：** JSON Pointer 中 `~` 必须写成 `~0`，`/` 必须写成 `~1`。例如键名 `a/b` 对应路径 `/a~1b`，键名 `x~y` 对应 `/x~0y`。
+
+`path` 既可以写**绝对路径**（以 `/` 开头），也可以写**相对路径**（不带 `/`，仅在列表模板项内有效，见 4.4）。
+
+### 4.2 在组件属性中绑定 dataModel
+
+只要组件 schema 声明某属性为 dynamic，就可以用 `{ "path": "/xxx" }` 替代字面量。例如 `Text.text`、`Image.url`、`Icon.name`、`Slider.value`、`Button.child` 引用的子组件等。
+
+```json
+{ "id": "greeting", "component": "Text", "text": { "path": "/message" }, "variant": "h3" }
+```
+
+渲染时，引擎会取 `dataModel.message` 的值作为文本。如果该路径不存在，返回 `null`，属性按空值处理（不抛异常）。
+
+### 4.3 updateDataModel 的三种用法
+
+`updateDataModel` 消息体有三个字段：`surfaceId`（必填）、`path`（可选）、`value`（可选）。
+
+#### 用法一：整体替换 dataModel（不传 path）
+
+`path` 省略或为 `""`/`"/"` 时，`value` 必须是 JSON 对象，**整体替换**整个 dataModel：
+
+```json
+{
+  "version": "v0.9.1",
+  "updateDataModel": {
+    "surfaceId": "main",
+    "value": {
+      "message": "Hello A2UI",
+      "user": { "name": "kid", "age": 18 },
+      "items": [ { "title": "任务一" }, { "title": "任务二" } ]
+    }
+  }
+}
+```
+
+#### 用法二：更新指定路径（path + value）
+
+只更新 dataModel 的某个子路径，其余字段不变。中间路径不存在时会**自动创建**：
+
+```json
+{
+  "version": "v0.9.1",
+  "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/user/age",
+    "value": 19
+  }
+}
+```
+
+也可以向数组追加元素（用 `-` 索引）：
+
+```json
+{
+  "version": "v0.9.1",
+  "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/items/-",
+    "value": { "title": "任务三" }
+  }
+}
+```
+
+#### 用法三：删除指定路径（有 path，无 value）
+
+消息体只有 `surfaceId` 和 `path`、没有 `value` 时，删除该路径：
+
+```json
+{
+  "version": "v0.9.1",
+  "updateDataModel": {
+    "surfaceId": "main",
+    "path": "/user/age"
+  }
+}
+```
+
+> 💡 **关键行为：** `updateDataModel` 后，引擎会对整个 Surface 重新渲染。绑定到已变更路径（及其父路径、子路径）的组件都会拿到新值。
+
+### 4.4 列表动态渲染 + 相对路径
+
+`Row`/`Column`/`List` 的 `children` 属性支持 `{ "path": "/数组路径", "componentId": "模板组件ID" }`：引擎会遍历数组，为每项生成一个模板组件实例。
+
+在模板组件内部，绑定 `path` 可以写**相对路径**（不带 `/`），会自动拼接到当前数组项的绝对路径前。
+
+```json
+[
+  {
+    "id": "todo-list",
+    "component": "Column",
+    "children": { "path": "/items", "componentId": "todo-item" }
+  },
+  {
+    "id": "todo-item",
+    "component": "Row",
+    "children": ["todo-check", "todo-title"]
+  },
+  {
+    "id": "todo-check",
+    "component": "CheckBox",
+    "label": "",
+    "value": { "path": "done" }
+  },
+  {
+    "id": "todo-title",
+    "component": "Text",
+    "text": { "path": "title" },
+    "variant": "body"
+  }
+]
+```
+
+当 dataModel 为：
+
+```json
+{ "items": [ { "title": "买牛奶", "done": true }, { "title": "写代码", "done": false } ] }
+```
+
+渲染结果是两行列，每行一个 CheckBox + Text。模板内的 `done` 和 `title` 是相对路径，分别解析为 `/items/0/done`、`/items/0/title`、`/items/1/done`、`/items/1/title`。
+
+### 4.5 事件 context 中的 `#/path` 引用
+
+Button `action.event.context` 里的值可以写 `#/path/to/dataModel`（注意带 `#` 前缀），点击时自动替换为 dataModel 中对应路径的当前值。详见 3.4.1。
+
+### 4.6 完整示例：待办清单（数据绑定 + 动态列表 + updateDataModel）
+
+下面这个 demo 展示了：创建 Surface → 用绑定渲染列表 → 点击按钮追加一条任务。
+
+```json
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "todo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": { "primaryColor": "#6750A4" },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "todo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Card",
+          "child": "layout",
+          "style": { "background": { "color": "#FFFFFFFF", "cornerRadius": 16 }, "padding": 16 }
+        },
+        {
+          "id": "layout",
+          "component": "Column",
+          "children": ["header", "list", "add-btn"]
+        },
+        {
+          "id": "header",
+          "component": "Text",
+          "text": { "path": "/title" },
+          "variant": "h4"
+        },
+        {
+          "id": "list",
+          "component": "Column",
+          "children": { "path": "/items", "componentId": "row" }
+        },
+        {
+          "id": "row",
+          "component": "Row",
+          "children": ["check", "title"]
+        },
+        {
+          "id": "check",
+          "component": "CheckBox",
+          "label": "",
+          "value": { "path": "done" }
+        },
+        {
+          "id": "title",
+          "component": "Text",
+          "text": { "path": "title" },
+          "variant": "body"
+        },
+        {
+          "id": "add-btn",
+          "component": "Button",
+          "variant": "filled",
+          "child": "add-btn-text",
+          "action": { "event": { "name": "addTodo" } }
+        },
+        { "id": "add-btn-text", "component": "Text", "text": "新增一条", "variant": "body" }
+      ]
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateDataModel": {
+      "surfaceId": "todo",
+      "value": {
+        "title": "今日待办",
+        "items": [
+          { "title": "买牛奶", "done": true },
+          { "title": "写代码", "done": false }
+        ]
+      }
+    }
+  }
+]
+```
+
+Java 端收到 `addTodo` 事件后，向数组追加一项：
+
+```java
+a2uiView.setActionListener(action -> {
+    if ("addTodo".equals(action.getName())) {
+        a2uiView.render("{\"version\":\"v0.9.1\",\"updateDataModel\":{"
+                + "\"surfaceId\":\"todo\","
+                + "\"path\":\"/items/-\","
+                + "\"value\":{\"title\":\"新任务\",\"done\":false}}}");
+    }
+});
+```
+
+也可以一次性整体替换 `items`：
+
+```java
+a2uiView.render("{\"version\":\"v0.9.1\",\"updateDataModel\":{"
+        + "\"surfaceId\":\"todo\","
+        + "\"value\":{\"title\":\"今日待办\",\"items\":["
+        + "{\"title\":\"买牛奶\",\"done\":true},"
+        + "{\"title\":\"写代码\",\"done\":true},"
+        + "{\"title\":\"新任务\",\"done\":false}]}}");
+```
+
+Sample 中的 `music_player.json`（曲名/歌手/进度绑定）、`weather_card.json`（三日预报动态列表）、`fitness_card.json`（步数 Slider 绑定）都是真实的 dataModel 绑定示例。
+
+## 5. registerComponentStyler 使用方法
 
 `A2uiComponentStyler` 可以直接修改组件最外层的原生 View，适合设置文字颜色、背景、尺寸、间距和具体 Android 控件属性。
 
-### 4.1 全局样式
+### 5.1 全局样式
 
 没有更具体的设置器时使用：
 
@@ -309,7 +562,7 @@ a2uiView.setGlobalComponentStyler((view, component, context) -> {
 });
 ```
 
-### 4.2 按组件类型注册
+### 5.2 按组件类型注册
 
 ```java
 a2uiView.registerComponentTypeStyler("Button", (view, component, context) -> {
@@ -317,7 +570,7 @@ a2uiView.registerComponentTypeStyler("Button", (view, component, context) -> {
 });
 ```
 
-### 4.3 为指定组件 ID 注册私有样式
+### 5.3 为指定组件 ID 注册私有样式
 
 只作用于 Surface `demo` 中的 `music-play`：
 
@@ -337,7 +590,7 @@ a2uiView.registerComponentStyler("demo", "music-play", (view, component, context
 a2uiView.registerComponentStyler("music-play", styler);
 ```
 
-### 4.4 优先级与执行规则
+### 5.4 优先级与执行规则
 
 ```text
 指定 Surface + 组件 ID 设置器
@@ -354,19 +607,19 @@ a2uiView.registerComponentStyler("music-play", styler);
 - `component`：当前组件的原始 JSON。
 - `context`：可获取 Surface、数据作用域、Android Context，或解析动态值。
 
-### 4.4 在自定义 Styler 中加载网络图片
+### 5.5 在自定义 Styler 中加载网络图片
 
 自定义渲染器或 Styler 可以通过 `context.loadImage(url, imageView)` 复用当前 `A2uiView` 的图片加载器，无需重复实现网络请求和缓存。
 
 Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `weather-photo-card` 注册私有 Styler，将背景 `ImageView` 放在内容下层，并使用 `ImageView.ScaleType.FIT_XY` 按卡片宽高拉伸填满。完整实现见 `sample/src/main/java/org/a2ui/android/v0_9_1/sample/MainActivity.java`。
 
-## 5. JSON style 样式（Android 客户端扩展）
+## 6. JSON style 样式（Android 客户端扩展）
 
 > ⚠️ **`style` 不是 A2UI v0.9.1 协议定义的属性**。协议的 `common_types.json` 里组件基类只有 `id` 和 `accessibility`，每个组件 schema 声明 `"unevaluatedProperties": false`，要求协议外字段**静默忽略**。
 >
 > 本库的 `ComponentStyleApplier` 在"静默忽略"的基础上**额外解析** style 字段并应用到原生 View。解析失败仍静默忽略，不会破坏协议兼容性——一个严格协议合规的客户端可以完全不解析 style，视觉效果交由原生 Styler 实现。
 
-### 5.1 颜色格式与单位
+### 6.1 颜色格式与单位
 
 **颜色格式：**
 
@@ -386,7 +639,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | `textSize` | **sp** | Scale Independent Pixels，跟随系统字体设置 |
 | `alpha` | 0.0～1.0 | 无单位 |
 
-### 5.2 组件差异：style 适用范围
+### 6.2 组件差异：style 适用范围
 
 | 组件 | background | stateStyles | textColor/textSize/textStyle | padding | elevation | 备注 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -405,7 +658,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | Divider | ✅ | — | — | — | — | 覆盖颜色需注意 divider 高度只有 1dp |
 | Modal | ✅ | — | — | — | ✅ | 背景加在 AlertDialog Builder |
 
-### 5.3 style 顶层属性
+### 6.3 style 顶层属性
 
 | 属性 | 类型 | 默认值 | 适用组件 | 说明 |
 | --- | --- | --- | --- | --- |
@@ -421,7 +674,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | `alpha` | number | 1.0 | 全部 | 0～1 |
 | `clipToOutline` | boolean | 有圆角时 true | 大部分容器 | 是否按背景轮廓裁剪子内容（如图片超出圆角时） |
 
-### 5.4 stateStyles 对象
+### 6.4 stateStyles 对象
 
 | key | Android state | 适用组件 | 说明 |
 | --- | --- | --- | --- |
@@ -435,7 +688,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 
 **stateStyles 中的 background**：每个 key 的值是完整的 background 对象——可以是纯色简写字符串，也可以是带渐变/圆角/描边的对象。与顶层 `background` 对象完全相同的规格。
 
-### 5.5 background 对象
+### 6.5 background 对象
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -460,9 +713,9 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | `TR_BL` | 右上→左下 | ↙ |
 | `BL_TR` | 左下→右上 | ↗ |
 
-### 5.6 完整示例
+### 6.6 完整示例
 
-#### 5.6.1 渐变 Button + stateStyles + textStyle
+#### 6.6.1 渐变 Button + stateStyles + textStyle
 
 ```json
 {
@@ -493,7 +746,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 }
 ```
 
-#### 5.6.2 纯色 Card + 圆角 + 内边距 + 阴影
+#### 6.6.2 纯色 Card + 圆角 + 内边距 + 阴影
 
 ```json
 {
@@ -514,7 +767,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 }
 ```
 
-#### 5.6.3 描边 Button（outline）+ BoldItalic
+#### 6.6.3 描边 Button（outline）+ BoldItalic
 
 ```json
 {
@@ -541,7 +794,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 }
 ```
 
-#### 5.6.4 简洁 Text style
+#### 6.6.4 简洁 Text style
 
 ```json
 {
@@ -559,7 +812,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 }
 ```
 
-#### 5.6.5 stateStyles 简写（纯色）
+#### 6.6.5 stateStyles 简写（纯色）
 
 stateStyles 的每个状态值可以是**颜色字符串简写**，不必写完整对象：
 
@@ -575,7 +828,7 @@ stateStyles 的每个状态值可以是**颜色字符串简写**，不必写完�
 }
 ```
 
-### 5.7 优先级与执行顺序
+### 6.7 优先级与执行顺序
 
 ```
 执行顺序：
@@ -590,7 +843,7 @@ stateStyles 的每个状态值可以是**颜色字符串简写**，不必写完�
 Styler 后执行 → Styler 覆盖 JSON style。
 ```
 
-### 5.8 静默失败保证
+### 6.8 静默失败保证
 
 style 是客户端扩展。以下情况**不会抛异常**，组件正常渲染：
 
@@ -603,7 +856,7 @@ style 是客户端扩展。以下情况**不会抛异常**，组件正常渲染�
 | stateStyles 中某个 state 非法 | 跳过该 state，默认态仍有效 |
 | textStyle 值非法 | 忽略，保持 normal |
 
-### 5.9 JSON style 能做 vs 不能做
+### 6.9 JSON style 能做 vs 不能做
 
 | 能做（style 声明式） | 不能做（必须用 Java Styler） | 原因 |
 | --- | --- | --- |
@@ -664,7 +917,7 @@ a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component,
 
 支持动态值的属性可以使用 `{ "path": "/user/name" }`；动态列表使用 `{ "path": "/items", "componentId": "item" }`。
 
-## 7. 业务 Demo 效果图
+## 8. 业务 Demo 效果图
 
 <table>
   <tr>
@@ -704,7 +957,7 @@ a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component,
 
 Sample 共提供十一个可切换示例，新增三个组件示例合起来覆盖 Basic Catalog 全部 18 类组件。
 
-## 8. 构建与发布
+## 9. 构建与发布
 
 ```bash
 # 运行测试
@@ -725,13 +978,13 @@ Sample 共提供十一个可切换示例，新增三个组件示例合起来覆�
 发布 JitPack 时，将包含 `jitpack.yml` 和 `maven-publish` 配置的代码推送到 GitHub，再创建版本标签：
 
 ```bash
-git tag -a v0.9.2 -m "Android renderer v0.9.2 (A2UI v0.9.1)"
-git push origin v0.9.2
+git tag -a v0.9.4 -m "Android renderer v0.9.4 (A2UI v0.9.1)"
+git push origin v0.9.4
 ```
 
 随后可在 [JitPack 构建页面](https://jitpack.io/#yaobin-kid/a2ui-android) 查看版本构建状态。
 
-## 9. 源码结构
+## 10. 源码结构
 
 ```text
 a2ui/                 A2UI Android 库
