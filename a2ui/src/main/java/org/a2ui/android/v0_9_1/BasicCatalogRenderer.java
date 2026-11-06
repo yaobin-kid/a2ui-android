@@ -450,11 +450,24 @@ final class BasicCatalogRenderer {
             button.setBackground(new RippleDrawable(ColorStateList.valueOf(withAlpha(primary, 50)),
                     background, null));
         }
-        View child = context.renderChild(requiredId(component, "child"));
-        if (child instanceof TextView && "primary".equals(variant)) {
-            ((TextView) child).setTextColor(Color.WHITE);
-        } else if (child instanceof TextView && "borderless".equals(variant)) {
-            ((TextView) child).setTextColor(primary);
+        String childId = requiredId(component, "child");
+        View child = context.renderChild(childId);
+        // 只有当子 Text 组件自己没有 style.textColor 时，variant 才设默认颜色。
+        // 如果子组件有 textColor（ComponentStyleApplier 已经设置了），不要覆盖它。
+        boolean childHasColor = false;
+        try {
+            JsonObject childComp = context.getSurface().getComponent(childId);
+            if (childComp != null && childComp.has("style")
+                    && childComp.getAsJsonObject("style").has("textColor")) {
+                childHasColor = true;
+            }
+        } catch (Exception ignored) {}
+        if (child instanceof TextView && !childHasColor) {
+            if ("primary".equals(variant)) {
+                ((TextView) child).setTextColor(Color.WHITE);
+            } else if ("borderless".equals(variant)) {
+                ((TextView) child).setTextColor(primary);
+            }
         }
         button.addView(child);
         button.setTag(new ComponentAction(context, component.getAsJsonObject("action"),

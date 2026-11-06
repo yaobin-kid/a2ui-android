@@ -311,8 +311,12 @@
         {
           "id": "btn-ghost-text",
           "component": "Text",
-          "text": "文字按钮",
-          "variant": "body"
+          "text": "文字x按钮",
+          "variant": "body",
+          "style": {
+            "textSize": 26,
+            "textColor": "#FFFF0000"
+          }
         },
         {
           "id": "state-buttons",
