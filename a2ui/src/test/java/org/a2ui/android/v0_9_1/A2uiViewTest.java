@@ -106,6 +106,19 @@ public class A2uiViewTest {
     }
 
     @Test
+    public void styleParsingFailureIsSilent() {
+        // style 字段不是 v0.9.1 协议定义的——属于客户端扩展。
+        // 协议要求未知字段静默忽略。非法 style 声明不应抛异常。
+        A2uiView view = new A2uiView(RuntimeEnvironment.getApplication());
+        view.render("{\"version\":\"v0.9.1\",\"createSurface\":{\"surfaceId\":\"main\",\"catalogId\":\"basic\"}}"
+                + "\n{\"version\":\"v0.9.1\",\"updateComponents\":{\"surfaceId\":\"main\",\"components\":["
+                + "{\"id\":\"root\",\"component\":\"Text\",\"text\":\"OK\",\"style\":42,"
+                + "\"foo\":\"bar\"}]}}"); // style 类型非法，但不抛异常
+        View content = ((ViewGroup) view.getSurfaceView("main")).getChildAt(0);
+        assertNotNull(content);
+    }
+
+    @Test
     public void appliesSurfacePrimaryColorToNativeInputs() {
         A2uiView view = new A2uiView(RuntimeEnvironment.getApplication());
         view.render("{\"version\":\"v0.9.1\",\"createSurface\":{\"surfaceId\":\"main\",\"catalogId\":\"basic\","

@@ -1,100 +1,171 @@
 [
-  {
-    "version": "v0.9.1",
-    "createSurface": {
-      "surfaceId": "demo",
-      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
-      "theme": { "primaryColor": "#3F51B5" },
-      "sendDataModel": true
+    {
+        "version":  "v0.9.1",
+        "createSurface":  {
+                              "surfaceId":  "demo",
+                              "catalogId":  "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+                              "theme":  {
+                                            "primaryColor":  "#3F51B5"
+                                        },
+                              "sendDataModel":  true
+                          }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateComponents":  {
+                                 "surfaceId":  "demo",
+                                 "components":  [
+                                                    {
+                                                        "id":  "root",
+                                                        "component":  "Card",
+                                                        "child":  "schedule-layout"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-layout",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "schedule-header",
+                                                                         "schedule-time",
+                                                                         "schedule-title",
+                                                                         "schedule-location",
+                                                                         "schedule-attendees",
+                                                                         "schedule-actions"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "schedule-header",
+                                                        "component":  "Row",
+                                                        "justify":  "spaceBetween",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "schedule-header-text",
+                                                                         "schedule-header-icon"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "schedule-header-text",
+                                                        "component":  "Text",
+                                                        "text":  "下一个日程",
+                                                        "variant":  "h4"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-header-icon",
+                                                        "component":  "Icon",
+                                                        "name":  "event"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-time",
+                                                        "component":  "Text",
+                                                        "text":  "14:30 - 15:30",
+                                                        "variant":  "h2"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-title",
+                                                        "component":  "Text",
+                                                        "text":  "Android 播放器评审",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-location",
+                                                        "component":  "Row",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "schedule-location-icon",
+                                                                         "schedule-location-text"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "schedule-location-icon",
+                                                        "component":  "Icon",
+                                                        "name":  "locationOn"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-location-text",
+                                                        "component":  "Text",
+                                                        "text":  "线上会议 · 第 3 会议室",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-attendees",
+                                                        "component":  "Row",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "schedule-avatar-1",
+                                                                         "schedule-avatar-2",
+                                                                         "schedule-avatar-3",
+                                                                         "schedule-attendees-text"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "schedule-avatar-1",
+                                                        "component":  "Icon",
+                                                        "name":  "accountCircle"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-avatar-2",
+                                                        "component":  "Icon",
+                                                        "name":  "accountCircle"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-avatar-3",
+                                                        "component":  "Icon",
+                                                        "name":  "accountCircle"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-attendees-text",
+                                                        "component":  "Text",
+                                                        "text":  "8 位参与人",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-actions",
+                                                        "component":  "Row",
+                                                        "justify":  "end",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "schedule-calendar",
+                                                                         "schedule-join"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "schedule-calendar",
+                                                        "component":  "Button",
+                                                        "variant":  "borderless",
+                                                        "child":  "schedule-calendar-text",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "openCalendar",
+                                                                                     "context":  {
+                                                                                                     "meetingId":  "A2UI-103"
+                                                                                                 }
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "schedule-calendar-text",
+                                                        "component":  "Text",
+                                                        "text":  "查看日历"
+                                                    },
+                                                    {
+                                                        "id":  "schedule-join",
+                                                        "component":  "Button",
+                                                        "variant":  "primary",
+                                                        "child":  "schedule-join-text",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "joinMeeting",
+                                                                                     "context":  {
+                                                                                                     "meetingId":  "A2UI-103"
+                                                                                                 }
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "schedule-join-text",
+                                                        "component":  "Text",
+                                                        "text":  "加入会议"
+                                                    }
+                                                ]
+                             }
     }
-  },
-  {
-    "version": "v0.9.1",
-    "updateComponents": {
-      "surfaceId": "demo",
-      "components": [
-        {
-          "id": "root",
-          "component": "Card",
-          "child": "schedule-layout",
-          "style": {
-            "background": {
-              "gradientColors": ["#FFE8EAF6", "#FFFFFFFF"],
-              "gradientOrientation": "TOP_BOTTOM",
-              "cornerRadius": 24,
-              "strokeWidth": 1,
-              "strokeColor": "#FFC5CAE9"
-            },
-            "padding": 20,
-            "elevation": 4
-          }
-        },
-        {
-          "id": "schedule-layout",
-          "component": "Column",
-          "children": ["schedule-header", "schedule-time", "schedule-title", "schedule-location", "schedule-attendees", "schedule-actions"]
-        },
-        {
-          "id": "schedule-header",
-          "component": "Row",
-          "justify": "spaceBetween",
-          "align": "center",
-          "children": ["schedule-header-text", "schedule-header-icon"]
-        },
-        { "id": "schedule-header-text", "component": "Text", "text": "下一个日程", "variant": "h4" },
-        { "id": "schedule-header-icon", "component": "Icon", "name": "event" },
-        {
-          "id": "schedule-time",
-          "component": "Text",
-          "text": "14:30 - 15:30",
-          "variant": "h2",
-          "style": { "padding": [0, 12, 0, 0] }
-        },
-        { "id": "schedule-title", "component": "Text", "text": "Android 播放器评审", "variant": "h5" },
-        {
-          "id": "schedule-location",
-          "component": "Row",
-          "align": "center",
-          "children": ["schedule-location-icon", "schedule-location-text"],
-          "style": { "padding": [0, 8, 0, 8] }
-        },
-        { "id": "schedule-location-icon", "component": "Icon", "name": "locationOn" },
-        { "id": "schedule-location-text", "component": "Text", "text": "线上会议 · 第 3 会议室", "variant": "caption" },
-        {
-          "id": "schedule-attendees",
-          "component": "Row",
-          "align": "center",
-          "children": ["schedule-avatar-1", "schedule-avatar-2", "schedule-avatar-3", "schedule-attendees-text"]
-        },
-        { "id": "schedule-avatar-1", "component": "Icon", "name": "accountCircle" },
-        { "id": "schedule-avatar-2", "component": "Icon", "name": "accountCircle" },
-        { "id": "schedule-avatar-3", "component": "Icon", "name": "accountCircle" },
-        { "id": "schedule-attendees-text", "component": "Text", "text": "8 位参与人", "variant": "caption" },
-        {
-          "id": "schedule-actions",
-          "component": "Row",
-          "justify": "end",
-          "align": "center",
-          "children": ["schedule-calendar", "schedule-join"],
-          "style": { "padding": [0, 12, 0, 0] }
-        },
-        {
-          "id": "schedule-calendar",
-          "component": "Button",
-          "variant": "borderless",
-          "child": "schedule-calendar-text",
-          "action": { "event": { "name": "openCalendar", "context": { "meetingId": "A2UI-103" } } }
-        },
-        { "id": "schedule-calendar-text", "component": "Text", "text": "查看日历" },
-        {
-          "id": "schedule-join",
-          "component": "Button",
-          "variant": "primary",
-          "child": "schedule-join-text",
-          "action": { "event": { "name": "joinMeeting", "context": { "meetingId": "A2UI-103" } } }
-        },
-        { "id": "schedule-join-text", "component": "Text", "text": "加入会议" }
-      ]
-    }
-  }
 ]

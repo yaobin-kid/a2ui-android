@@ -30,12 +30,13 @@ public class MainActivity extends Activity {
     private static final String TAG = "A2uiSample";
     private static final String[] DEMO_NAMES = {
             "音乐播放器", "天气卡片", "签到卡片", "日程卡片", "运动卡片", "账户卡片", "综合表单",
-            "媒体展示", "布局导航", "输入控件", "天气图片背景"
+            "媒体展示", "布局导航", "输入控件", "天气图片背景", "Styler 样式展示"
     };
     private static final String[] DEMO_FILES = {
             "music_player.json", "weather_card.json", "checkin_card.json",
             "schedule_card.json", "fitness_card.json", "payment_card.json", "sample.json",
-            "media_showcase.json", "layout_showcase.json", "input_controls.json", "weather_image_card.json"
+            "media_showcase.json", "layout_showcase.json", "input_controls.json", "weather_image_card.json",
+            "style_showcase.json"
     };
 
     private static final String[] TRACK_TITLES = {"Night Drive", "Midnight City", "Ocean Eyes"};
@@ -103,6 +104,7 @@ public class MainActivity extends Activity {
     }
 
     private void registerStylers() {
+        // ===== 全局和类型级：每个 demo 都需要的通用原生属性 =====
         a2uiView.setGlobalComponentStyler((view, component, context) -> {
             if (view instanceof TextView) {
                 ((TextView) view).setIncludeFontPadding(false);
@@ -110,10 +112,42 @@ public class MainActivity extends Activity {
         });
         a2uiView.registerComponentTypeStyler("Button",
                 (view, component, context) -> view.setMinimumHeight(dp(44)));
+
+        // ===== 音乐播放器 Icon 组件：JSON name 映射原生 vector drawable =====
+        a2uiView.registerComponentStyler("demo", "music-previous-icon", (view, component, context) -> {
+            ImageView icon = (ImageView) view;
+            icon.setImageResource(R.drawable.ic_skip_previous);
+            icon.setColorFilter(Color.rgb(103, 80, 164));
+        });
+        a2uiView.registerComponentStyler("demo", "music-next-icon", (view, component, context) -> {
+            ImageView icon = (ImageView) view;
+            icon.setImageResource(R.drawable.ic_skip_next);
+            icon.setColorFilter(Color.rgb(103, 80, 164));
+        });
+        a2uiView.registerComponentStyler("demo", "music-play-icon", (view, component, context) -> {
+            ImageView icon = (ImageView) view;
+            String name = context.getSurface().resolveString(component.get("name"), context.getScope());
+            icon.setImageResource("pause".equals(name) ? R.drawable.ic_pause : R.drawable.ic_play_arrow);
+            icon.setColorFilter(Color.WHITE);
+        });
+        a2uiView.registerComponentStyler("demo", "music-cover", (view, component, context) -> {
+            // cover 背景色已由 JSON style 处理；这里只负责加载占位图标
+            ImageView cover = (ImageView) view;
+            cover.setImageResource(R.drawable.ic_play_arrow);
+            cover.setColorFilter(Color.WHITE);
+            cover.setScaleType(ImageView.ScaleType.CENTER);
+        });
+
+        // ===== weather-image-card：FrameLayout 叠 ImageView 加载网络图片 =====
+        // JSON style 只能设置背景色/渐变，加载远程图片当背景需要原生 Layer
         a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component, context) -> {
             FrameLayout card = (FrameLayout) view;
+            GradientDrawable mask = new GradientDrawable();
+            mask.setColors(new int[]{0xCC000000, 0x66000000});
+            mask.setCornerRadius(dp(24));
             ImageView background = new ImageView(this);
             background.setScaleType(ImageView.ScaleType.FIT_XY);
+            background.setBackground(mask);
             background.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -122,42 +156,8 @@ public class MainActivity extends Activity {
             card.addOnLayoutChangeListener((v, left, top, right, bottom,
                     oldLeft, oldTop, oldRight, oldBottom) ->
                     background.layout(0, 0, right - left, bottom - top));
-            String url = component.getAsJsonObject("style")
-                    .getAsJsonObject("background").get("imageUrl").getAsString();
+            String url = "https://sslcdn.lifex360.com/icon/2026/07/7abvzteswetomhnej2eq.png";
             context.loadImage(url, background);
-        });
-        a2uiView.registerComponentStyler("demo", "music-cover", (view, component, context) -> {
-            ImageView cover = (ImageView) view;
-            cover.setImageResource(R.drawable.ic_play_arrow);
-            cover.setColorFilter(Color.WHITE);
-            cover.setScaleType(ImageView.ScaleType.CENTER);
-        });
-        a2uiView.registerComponentStyler("demo", "music-previous-icon", (view, component, context) -> {
-            ImageView icon = (ImageView) view;
-            icon.setImageResource(R.drawable.ic_skip_previous);
-            icon.setColorFilter(Color.rgb(103, 80, 164));
-            icon.setLayoutParams(new ViewGroup.LayoutParams(dp(28), dp(28)));
-        });
-        a2uiView.registerComponentStyler("demo", "music-next-icon", (view, component, context) -> {
-            ImageView icon = (ImageView) view;
-            icon.setImageResource(R.drawable.ic_skip_next);
-            icon.setColorFilter(Color.rgb(103, 80, 164));
-            icon.setLayoutParams(new ViewGroup.LayoutParams(dp(28), dp(28)));
-        });
-        a2uiView.registerComponentStyler("demo", "music-play-icon", (view, component, context) -> {
-            ImageView icon = (ImageView) view;
-            String name = context.getSurface().resolveString(component.get("name"), context.getScope());
-            icon.setImageResource("pause".equals(name) ? R.drawable.ic_pause : R.drawable.ic_play_arrow);
-            icon.setColorFilter(Color.WHITE);
-            icon.setLayoutParams(new ViewGroup.LayoutParams(dp(32), dp(32)));
-        });
-        a2uiView.registerComponentStyler("demo", "music-play", (view, component, context) -> {
-            GradientDrawable background = new GradientDrawable();
-            background.setColor(Color.rgb(103, 80, 164));
-            background.setCornerRadius(dp(32));
-            view.setBackground(background);
-            view.setPadding(dp(16), dp(16), dp(16), dp(16));
-            view.setMinimumHeight(dp(64));
         });
     }
 

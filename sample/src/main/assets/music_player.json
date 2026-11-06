@@ -1,136 +1,216 @@
 [
-  {
-    "version": "v0.9.1",
-    "createSurface": {
-      "surfaceId": "demo",
-      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
-      "theme": { "primaryColor": "#6750A4" },
-      "sendDataModel": true
+    {
+        "version":  "v0.9.1",
+        "createSurface":  {
+                              "surfaceId":  "demo",
+                              "catalogId":  "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+                              "theme":  {
+                                            "primaryColor":  "#6750A4"
+                                        },
+                              "sendDataModel":  true
+                          }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateComponents":  {
+                                 "surfaceId":  "demo",
+                                 "components":  [
+                                                    {
+                                                        "id":  "root",
+                                                        "component":  "Card",
+                                                        "child":  "music-layout",
+                                                        "style":  {
+                                                                      "background":  {
+                                                                                         "color":  "#FFFFFFFF",
+                                                                                         "cornerRadius":  20
+                                                                                     },
+                                                                      "padding":  [20, 20, 20, 20],
+                                                                      "elevation":  4
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "music-layout",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "music-cover",
+                                                                         "music-title-row",
+                                                                         "music-artist",
+                                                                         "music-status",
+                                                                         "music-progress",
+                                                                         "music-controls"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "music-cover",
+                                                        "component":  "Image",
+                                                        "url":  "",
+                                                        "description":  "专辑封面",
+                                                        "variant":  "header",
+                                                        "fit":  "cover",
+                                                        "style":  {
+                                                                      "background":  {
+                                                                                         "gradientColors":  [
+                                                                                                               "#FF8E77C7",
+                                                                                                               "#FF3D5A98"
+                                                                                                           ],
+                                                                                         "gradientOrientation":  "TL_BR",
+                                                                                         "cornerRadius":  18,
+                                                                                         "clipToOutline":  true
+                                                                                     },
+                                                                      "padding":  24
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "music-title-row",
+                                                        "component":  "Row",
+                                                        "justify":  "spaceBetween",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "music-title",
+                                                                         "music-refresh"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "music-title",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "/track/title"
+                                                                 },
+                                                        "variant":  "h3"
+                                                    },
+                                                    {
+                                                        "id":  "music-refresh",
+                                                        "component":  "Button",
+                                                        "variant":  "borderless",
+                                                        "child":  "music-refresh-text",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "refreshData"
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "music-refresh-text",
+                                                        "component":  "Text",
+                                                        "text":  "刷新数据",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "music-artist",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "/track/artist"
+                                                                 },
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "music-status",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "/status"
+                                                                 },
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "music-progress",
+                                                        "component":  "Slider",
+                                                        "label":  {
+                                                                      "path":  "/progressLabel"
+                                                                  },
+                                                        "min":  0,
+                                                        "max":  {
+                                                                    "path":  "/duration"
+                                                                },
+                                                        "value":  {
+                                                                      "path":  "/position"
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "music-controls",
+                                                        "component":  "Row",
+                                                        "justify":  "center",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "music-previous",
+                                                                         "music-play",
+                                                                         "music-next"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "music-previous",
+                                                        "component":  "Button",
+                                                        "variant":  "borderless",
+                                                        "child":  "music-previous-icon",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "previous"
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "music-previous-icon",
+                                                        "component":  "Icon",
+                                                        "name":  "skipPrevious"
+                                                    },
+                                                    {
+                                                        "id":  "music-play",
+                                                        "component":  "Button",
+                                                        "variant":  "borderless",
+                                                        "child":  "music-play-icon",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "togglePlay"
+                                                                                 }
+                                                                   },
+                                                        "style":  {
+                                                                      "background":  {
+                                                                                         "color":  "#FF6750A4",
+                                                                                         "cornerRadius":  32
+                                                                                     },
+                                                                      "padding":  [16, 16, 16, 16]
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "music-play-icon",
+                                                        "component":  "Icon",
+                                                        "name":  {
+                                                                     "path":  "/playingIcon"
+                                                                 }
+                                                    },
+                                                    {
+                                                        "id":  "music-next",
+                                                        "component":  "Button",
+                                                        "variant":  "borderless",
+                                                        "child":  "music-next-icon",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "next"
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "music-next-icon",
+                                                        "component":  "Icon",
+                                                        "name":  "skipNext"
+                                                    }
+                                                ]
+                             }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateDataModel":  {
+                                "surfaceId":  "demo",
+                                "value":  {
+                                              "track":  {
+                                                            "title":  "Night Drive",
+                                                            "artist":  "A2UI Sound Lab · Synthwave"
+                                                        },
+                                              "position":  72,
+                                              "duration":  225,
+                                              "progressLabel":  "播放进度 · 01:12 / 03:45",
+                                              "playingIcon":  "play",
+                                              "status":  "未播放 · 点击刷新查看 updateDataModel"
+                                          }
+                            }
     }
-  },
-  {
-    "version": "v0.9.1",
-    "updateComponents": {
-      "surfaceId": "demo",
-      "components": [
-        {
-          "id": "root",
-          "component": "Card",
-          "child": "music-layout",
-          "style": {
-            "background": { "color": "#FFFFFFFF", "cornerRadius": 20, "clipToOutline": false },
-            "padding": 20,
-            "elevation": 0
-          }
-        },
-        {
-          "id": "music-layout",
-          "component": "Column",
-          "children": ["music-cover", "music-title-row", "music-artist", "music-status", "music-progress", "music-controls"]
-        },
-        {
-          "id": "music-cover",
-          "component": "Image",
-          "url": "",
-          "description": "专辑封面",
-          "variant": "header",
-          "fit": "cover",
-          "style": {
-            "background": {
-              "gradientColors": ["#FF8E77C7", "#FF3D5A98"],
-              "gradientOrientation": "TL_BR",
-              "cornerRadius": 18
-            }
-          }
-        },
-        {
-          "id": "music-title-row",
-          "component": "Row",
-          "justify": "spaceBetween",
-          "align": "center",
-          "children": ["music-title", "music-refresh"]
-        },
-        {
-          "id": "music-title",
-          "component": "Text",
-          "text": { "path": "/track/title" },
-          "variant": "h3",
-          "style": { "padding": [0, 12, 0, 0] }
-        },
-        {
-          "id": "music-refresh",
-          "component": "Button",
-          "variant": "borderless",
-          "child": "music-refresh-text",
-          "action": { "event": { "name": "refreshData" } },
-          "style": { "padding": [12, 4, 12, 4] }
-        },
-        { "id": "music-refresh-text", "component": "Text", "text": "刷新数据", "variant": "caption" },
-        { "id": "music-artist", "component": "Text", "text": { "path": "/track/artist" }, "variant": "caption" },
-        {
-          "id": "music-status",
-          "component": "Text",
-          "text": { "path": "/status" },
-          "variant": "caption",
-          "style": { "padding": [0, 4, 0, 0] }
-        },
-        {
-          "id": "music-progress",
-          "component": "Slider",
-          "label": { "path": "/progressLabel" },
-          "min": 0,
-          "max": { "path": "/duration" },
-          "value": { "path": "/position" }
-        },
-        {
-          "id": "music-controls",
-          "component": "Row",
-          "justify": "center",
-          "align": "center",
-          "children": ["music-previous", "music-play", "music-next"],
-          "style": { "padding": [0, 8, 0, 0] }
-        },
-        {
-          "id": "music-previous",
-          "component": "Button",
-          "variant": "borderless",
-          "child": "music-previous-icon",
-          "action": { "event": { "name": "previous" } },
-          "style": { "padding": 16 }
-        },
-        { "id": "music-previous-icon", "component": "Icon", "name": "skipPrevious" },
-        {
-          "id": "music-play",
-          "component": "Button",
-          "variant": "borderless",
-          "child": "music-play-icon",
-          "action": { "event": { "name": "togglePlay" } }
-        },
-        { "id": "music-play-icon", "component": "Icon", "name": { "path": "/playingIcon" } },
-        {
-          "id": "music-next",
-          "component": "Button",
-          "variant": "borderless",
-          "child": "music-next-icon",
-          "action": { "event": { "name": "next" } },
-          "style": { "padding": 16 }
-        },
-        { "id": "music-next-icon", "component": "Icon", "name": "skipNext" }
-      ]
-    }
-  },
-  {
-    "version": "v0.9.1",
-    "updateDataModel": {
-      "surfaceId": "demo",
-      "value": {
-        "track": { "title": "Night Drive", "artist": "A2UI Sound Lab · Synthwave" },
-        "position": 72,
-        "duration": 225,
-        "progressLabel": "播放进度 · 01:12 / 03:45",
-        "playingIcon": "play",
-        "status": "未播放 · 点击刷新查看 updateDataModel"
-      }
-    }
-  }
 ]

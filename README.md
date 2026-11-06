@@ -156,25 +156,141 @@ a2uiView.render("{\"version\":\"v0.9.1\",\"updateDataModel\":{"
 
 Sample 的音乐播放器演示了刷新、切歌和播放暂停时同时更新曲名、歌手、进度与图标，见 `sample/src/main/assets/music_player.json`。
 
-### 3.4 接收 Action
+### 3.4 Action 用法（Button 交互）
 
-```java
-a2uiView.setActionListener(action -> {
-    String name = action.getName();
-    JsonObject context = action.getContext();
-    // 执行应用业务，然后按需发送 updateDataModel。
-});
-```
+Button（以及 Modal 的 trigger）的 `action` 支持 **三种形式**，由组件被点击时触发。
 
-按钮 JSON：
+#### 3.4.1 event —— 发送事件到宿主应用
+
+最常用的形式。点击后封装成 `A2uiAction` 回调到宿主的 `A2uiActionListener`。
+
+**JSON：**
 
 ```json
 {
-  "id": "refresh",
+  "id": "submit",
   "component": "Button",
-  "child": "refreshText",
-  "action": { "event": { "name": "refreshData" } }
+  "variant": "filled",
+  "child": "submitText",
+  "action": {
+    "event": {
+      "name": "submitForm",
+      "context": {
+        "email": "#/form/email",
+        "nickname": "#/form/nickname",
+        "agreed": "#/form/agreed"
+      }
+    }
+  }
 }
+```
+
+**JSON Pointer 数据绑定：** `context` 里的值可以是 `#/path/to/dataModel`，解析时会自动替换成 dataModel 中对应路径的值。上例中点击按钮时，`context.email` 会是当前 dataModel 里 `/form/email` 的实际值。
+
+**Java 端接收：**
+
+```java
+a2uiView.setActionListener(action -> {
+    // action.getName()          → "submitForm"
+    // action.getSurfaceId()     → "main"
+    // action.getSourceComponentId() → "submit"
+    // action.getContext()       → {"email":"user@example.com","nickname":"kid","agreed":true}
+    // action.getDataModel()     → 整个 dataModel 快照（需 createSurface.sendDataModel=true）
+    JsonObject ctx = action.getContext();
+    String email = ctx.get("email").getAsString();
+    // 执行业务逻辑：网络请求、页面跳转、Toast……
+    // 完成后可发送 updateDataModel 刷新界面
+});
+```
+
+#### 3.4.2 functionCall —— 调用内置函数
+
+`functionCall` **不经过宿主 ActionListener**，直接在 Surface 内部执行，常用于数值格式化、条件显示等纯逻辑。
+
+**JSON：**
+
+```json
+{
+  "id": "btn-format",
+  "component": "Button",
+  "variant": "bordered",
+  "child": "btn-format-text",
+  "action": {
+    "functionCall": {
+      "call": "formatCurrency",
+      "args": { "value": "#/cart/total", "currency": "CNY" }
+    }
+  }
+}
+```
+
+**内置函数列表：**
+
+| 函数 | 说明 | args |
+| --- | --- | --- |
+| `formatString` | 字符串模板 | `template`（含 `{0}` `{1}`…）, `values`（数组） |
+| `formatNumber` | 数字格式化 | `value`, `decimals`（可选）, `grouping`（可选） |
+| `formatCurrency` | 货币格式化 | `value`, `currency`（ISO 4217 如 `CNY` `USD`）, `decimals`（可选） |
+| `formatDate` | 日期格式化 | `value`（ISO 8601 或时间戳）, `pattern` |
+| `pluralize` | 多语言复数 | `value`（数值）, `one`, `other`, `few` 等 |
+| `required` | 非空校验 | `value` |
+| `regex` | 正则校验 | `value`, `pattern` |
+| `length` | 长度校验 | `value`, `min`（可选）, `max`（可选） |
+| `numeric` | 数值范围校验 | `value`, `min`（可选）, `max`（可选） |
+| `email` | 邮箱格式校验 | `value` |
+| `openUrl` | 打开网页（需 Android 实现） | `url` |
+
+**注册自定义函数：**
+
+```java
+a2uiView.registerFunction("myApiFetch", args -> {
+    String endpoint = args.get("endpoint").getAsString();
+    // 执行网络请求……
+    return new JsonPrimitive(result);
+});
+```
+
+#### 3.4.3 input —— 输入写回（TextField / CheckBox / ChoicePicker / Slider）
+
+输入控件（**不是 Button**）的 `action` 使用 `input` 形式，将值写回 dataModel 指定路径。
+
+**JSON：**
+
+```json
+{
+  "id": "email-input",
+  "component": "TextField",
+  "binding": "#/form/email",
+  "action": { "input": { "target": "#/form/email" } }
+}
+```
+
+当用户输入或选中时，dataModel 的 `/form/email` 路径会被更新，并触发依赖该路径的所有组件重新渲染。
+
+#### 3.4.4 三种 Action 对比
+
+| 维度 | `event` | `functionCall` | `input` |
+| --- | --- | --- | --- |
+| 谁触发 | Button / Modal trigger | Button / 任意组件 | TextField / CheckBox / Slider |
+| 执行方 | 宿主应用（Java 端） | Surface 内置或注册函数 | Surface 内部 |
+| 结果 | 宿主决定做什么 | 返回值写入 dataModel（需显式绑定） | 自动写回 dataModel |
+| JSON Pointer 支持 | `context` 内的路径自动解析 | `args` 内路径自动解析 | `binding` 自动解析 |
+
+### 3.5 注册函数（扩展）
+
+除了内置的 11 个函数，宿主可以注册自定义函数：
+
+```java
+a2uiView.registerFunction("greet", args -> {
+    String name = args.get("name").getAsString();
+    return new JsonPrimitive("Hello, " + name + "!");
+});
+```
+
+JSON 中调用：
+
+```json
+{ "functionCall": { "call": "greet", "args": { "name": "#/user/name" } } }
 ```
 
 ## 4. registerComponentStyler 使用方法
@@ -244,43 +360,286 @@ a2uiView.registerComponentStyler("music-play", styler);
 
 Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `weather-photo-card` 注册私有 Styler，将背景 `ImageView` 放在内容下层，并使用 `ImageView.ScaleType.FIT_XY` 按卡片宽高拉伸填满。完整实现见 `sample/src/main/java/org/a2ui/android/v0_9_1/sample/MainActivity.java`。
 
-## 5. JSON 样式扩展
+## 5. JSON style 样式（Android 客户端扩展）
 
-`style` 是本库为所有组件提供的扩展属性，尺寸单位为 dp：
+> ⚠️ **`style` 不是 A2UI v0.9.1 协议定义的属性**。协议的 `common_types.json` 里组件基类只有 `id` 和 `accessibility`，每个组件 schema 声明 `"unevaluatedProperties": false`，要求协议外字段**静默忽略**。
+>
+> 本库的 `ComponentStyleApplier` 在"静默忽略"的基础上**额外解析** style 字段并应用到原生 View。解析失败仍静默忽略，不会破坏协议兼容性——一个严格协议合规的客户端可以完全不解析 style，视觉效果交由原生 Styler 实现。
+
+### 5.1 颜色格式与单位
+
+**颜色格式：**
+
+| 格式 | 示例 | 说明 |
+| --- | --- | --- |
+| `#RRGGBB` | `#FF6750A4` | 不透明纯色，Android 会自动把 6 位解释为不透明 |
+| `#AARRGGBB` | `#80FF6750A4` | 带 alpha 通道，`80` = 50% 透明 |
+| `#00RRGGBB` | `#00000000` | 完全透明 |
+
+**尺寸单位：**
+
+| 字段 | 单位 | 说明 |
+| --- | --- | --- |
+| `padding` / `paddingHorizontal` / `paddingVertical` | **dp** | Density Independent Pixels，自动适配屏幕密度 |
+| `cornerRadius` / `strokeWidth` | **dp** | 同上 |
+| `elevation` | **dp** | Android elevation 本身用 px，库内部自动转换 |
+| `textSize` | **sp** | Scale Independent Pixels，跟随系统字体设置 |
+| `alpha` | 0.0～1.0 | 无单位 |
+
+### 5.2 组件差异：style 适用范围
+
+| 组件 | background | stateStyles | textColor/textSize/textStyle | padding | elevation | 备注 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Button | ✅ | ✅ 支持 pressed/disabled/checked/focused | ✅ 递归应用到子 TextView | ✅ | ✅ | variant 为 `filled`/`bordered`/`borderless` 时会叠加 ripple，`stateStyles.pressed` 可覆盖 |
+| Card | ✅ | ✅ | — | ✅ | ✅ | 最外层容器 |
+| Row / Column | ✅ | — | — | ✅ | ✅ | 布局容器 |
+| Text | ✅ | — | ✅ 自身即是 TextView | ✅ | ✅ | textColor 会覆盖默认文字色 |
+| TextField | ✅ | ✅ disabled | — | ✅ | ✅ | 背景加在 TextInputLayout，颜色应用到子 EditText |
+| Image | ✅ | — | — | ✅ | ✅ | 背景叠加在图片后面，可做 placeholder |
+| Slider | ✅ | — | — | ✅ | ✅ | 背景加在 ProgressBar 外层容器 |
+| CheckBox | ✅ | ✅ checked/disabled | — | ✅ | — | 背景加在 CompoundButton 容器 |
+| ChoicePicker | ✅ | ✅ checked/disabled | — | ✅ | ✅ | 背景加在选择器外层 |
+| DateTimeInput | ✅ | ✅ disabled | — | ✅ | ✅ | TextInputLayout + 图标容器 |
+| Tabs | ✅ | ✅ selected | ✅ 选中 tab 子 TextView | ✅ | ✅ | — |
+| Icon | ✅ | — | — | ✅ | ✅ | 背景加在 ImageView 外层 |
+| Divider | ✅ | — | — | — | — | 覆盖颜色需注意 divider 高度只有 1dp |
+| Modal | ✅ | — | — | — | ✅ | 背景加在 AlertDialog Builder |
+
+### 5.3 style 顶层属性
+
+| 属性 | 类型 | 默认值 | 适用组件 | 说明 |
+| --- | --- | --- | --- | --- |
+| `background` | color string 或 object | 透明 | 全部 | 字符串是纯色简写 `"#FF112233"`；对象见下 |
+| `stateStyles` | object | 无 | Button / Tabs / CheckBox / ChoicePicker / DateTimeInput / TextField | 按下/选中/禁用/焦点态的背景覆盖 |
+| `textColor` | color string | 组件默认 | Text / Button / Tabs | **递归查找子 TextView** 并应用 |
+| `textSize` | number | 组件默认 | Text / Button / Tabs | 单位 sp，递归应用到子 TextView |
+| `textStyle` | `normal` / `bold` / `italic` / `boldItalic` | `normal` | Text / Button / Tabs | 递归应用 |
+| `padding` | number 或 `[left, top, right, bottom]` | 组件默认 | 全部 | 单个数四边相同；数组顺序 `[left, top, right, bottom]` |
+| `paddingHorizontal` | number | — | 全部 | 覆盖左右（dp） |
+| `paddingVertical` | number | — | 全部 | 覆盖上下（dp） |
+| `elevation` | number | 组件默认 | 大部分容器 | dp |
+| `alpha` | number | 1.0 | 全部 | 0～1 |
+| `clipToOutline` | boolean | 有圆角时 true | 大部分容器 | 是否按背景轮廓裁剪子内容（如图片超出圆角时） |
+
+### 5.4 stateStyles 对象
+
+| key | Android state | 适用组件 | 说明 |
+| --- | --- | --- | --- |
+| `"pressed"` | `state_pressed` | Button（所有 variant） | 手指按住/触摸中 |
+| `"checked"` | `state_checked` | CheckBox / ChoicePicker / Tabs（选中态） | 选中状态 |
+| `"disabled"` | `state_enabled = false` | 所有组件 | `component.enabled = false` 时显示 |
+| `"focused"` | `state_focused` | Button / 输入控件 | 获得焦点（遥控器/键盘导航） |
+| （默认） | 空 state | — | 未匹配任何状态时回退到 `background` 属性 |
+
+**实现机制：** Android `StateListDrawable` 是 first-match，因此 stateStyles 内部按 **disabled → pressed → checked → focused → default** 顺序添加。如果同时按下且禁用，disabled 优先显示。
+
+**stateStyles 中的 background**：每个 key 的值是完整的 background 对象——可以是纯色简写字符串，也可以是带渐变/圆角/描边的对象。与顶层 `background` 对象完全相同的规格。
+
+### 5.5 background 对象
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `color` | color string | `"#00000000"` | 纯色填充。未设置 `gradientColors` 时使用 |
+| `gradientColors` | color string 数组 | 无 | 至少 **2 种**颜色；设置后替代纯色。所有数组元素必须是有效的 `#RRGGBB` 或 `#AARRGGBB` |
+| `gradientOrientation` | 八方向枚举 | `"TOP_BOTTOM"` | 见下方枚举表 |
+| `cornerRadius` | number | `0` | 四角**统一**圆角半径（dp）。当前不支持四角分别设置不同半径 |
+| `strokeWidth` | number | `0` | 描边宽度（dp）。>0 时显示描边 |
+| `strokeColor` | color string | `"#FF000000"`（黑色） | 描边颜色 |
+| `clipToOutline` | boolean | 有圆角时自动 true | 是否按圆角轮廓裁剪子内容（如 Image 超出圆角区域） |
+
+**渐变方向枚举：**
+
+| 值 | 方向 | 示意 |
+| --- | --- | --- |
+| `TOP_BOTTOM`（默认） | 上→下 | ↓ |
+| `BOTTOM_TOP` | 下→上 | ↑ |
+| `LEFT_RIGHT` | 左→右 | → |
+| `RIGHT_LEFT` | 右→左 | ← |
+| `TL_BR` | 左上→右下 | ↘ |
+| `BR_TL` | 右下→左上 | ↖ |
+| `TR_BL` | 右上→左下 | ↙ |
+| `BL_TR` | 左下→右上 | ↗ |
+
+### 5.6 完整示例
+
+#### 5.6.1 渐变 Button + stateStyles + textStyle
 
 ```json
-"style": {
-  "background": {
-    "gradientColors": ["#FF8E77C7", "#FF3D5A98"],
-    "gradientOrientation": "TL_BR",
-    "cornerRadius": 18,
-    "strokeWidth": 1,
-    "strokeColor": "#40FFFFFF",
-    "clipToOutline": true
-  },
-  "padding": [16, 20, 16, 20],
-  "elevation": 4,
-  "alpha": 1
+{
+  "id": "my-button",
+  "component": "Button",
+  "variant": "filled",
+  "child": "btn-text",
+  "action": { "event": { "name": "submit" } },
+  "style": {
+    "background": {
+      "gradientColors": ["#FF6750A4", "#FF3D5A98"],
+      "gradientOrientation": "TL_BR",
+      "cornerRadius": 24,
+      "strokeWidth": 2,
+      "strokeColor": "#40FFFFFF",
+      "clipToOutline": true
+    },
+    "stateStyles": {
+      "pressed":  { "color": "#FF3D2B5B", "cornerRadius": 24 },
+      "disabled": { "color": "#FFBDBDBD", "cornerRadius": 24 }
+    },
+    "textColor": "#FFFFFFFF",
+    "textSize": 16,
+    "textStyle": "bold",
+    "padding": [28, 12, 28, 12],
+    "elevation": 4
+  }
 }
 ```
 
-| 属性 | 说明 |
+#### 5.6.2 纯色 Card + 圆角 + 内边距 + 阴影
+
+```json
+{
+  "id": "weather-card",
+  "component": "Card",
+  "child": "weather-content",
+  "style": {
+    "background": {
+      "gradientColors": ["#FFE1F5FE", "#FFFFFFFF"],
+      "gradientOrientation": "TOP_BOTTOM",
+      "cornerRadius": 24,
+      "strokeWidth": 1,
+      "strokeColor": "#FFB3E5FC"
+    },
+    "padding": [20, 20, 20, 20],
+    "elevation": 4
+  }
+}
+```
+
+#### 5.6.3 描边 Button（outline）+ BoldItalic
+
+```json
+{
+  "id": "btn-outline",
+  "component": "Button",
+  "variant": "bordered",
+  "child": "btn-outline-text",
+  "action": { "event": { "name": "reset" } },
+  "style": {
+    "background": {
+      "color": "#00000000",
+      "cornerRadius": 12,
+      "strokeWidth": 2,
+      "strokeColor": "#FFE91E63"
+    },
+    "stateStyles": {
+      "pressed": { "color": "#FFE91E63", "cornerRadius": 12, "strokeWidth": 2, "strokeColor": "#FFC2185B" }
+    },
+    "textColor": "#FFE91E63",
+    "textSize": 18,
+    "textStyle": "boldItalic",
+    "padding": [20, 10, 20, 10]
+  }
+}
+```
+
+#### 5.6.4 简洁 Text style
+
+```json
+{
+  "id": "title",
+  "component": "Text",
+  "text": "大标题",
+  "variant": "h3",
+  "style": {
+    "textColor": "#FF1A1A1A",
+    "textSize": 24,
+    "textStyle": "bold",
+    "background": { "color": "#FFF5F5F5", "cornerRadius": 8 },
+    "padding": [16, 8, 16, 8]
+  }
+}
+```
+
+#### 5.6.5 stateStyles 简写（纯色）
+
+stateStyles 的每个状态值可以是**颜色字符串简写**，不必写完整对象：
+
+```json
+{
+  "style": {
+    "background": { "color": "#FF2196F3", "cornerRadius": 24 },
+    "stateStyles": {
+      "pressed": "#FF1976D2",
+      "disabled": "#FF90CAF9"
+    }
+  }
+}
+```
+
+### 5.7 优先级与执行顺序
+
+```
+执行顺序：
+  ComponentStyleApplier.apply()  →  Java Styler 回调
+        ↓                                    ↓
+    JSON style 先应用                   registerComponentStyler(surfaceId, id)  ← 最高
+                                         registerComponentStyler(id)
+                                         registerComponentTypeStyler(type)
+                                         setGlobalComponentStyler()          ← 最低
+
+如果同一属性（如 background）同时在 JSON style 和 Java Styler 中设置，
+Styler 后执行 → Styler 覆盖 JSON style。
+```
+
+### 5.8 静默失败保证
+
+style 是客户端扩展。以下情况**不会抛异常**，组件正常渲染：
+
+| 情况 | 处理 |
 | --- | --- |
-| `background` | 颜色字符串或背景对象 |
-| `background.color` | 纯色，支持 `#RRGGBB`、`#AARRGGBB` |
-| `background.gradientColors` | 至少两种渐变颜色 |
-| `background.gradientOrientation` | 八种方向，如 `TOP_BOTTOM`、`TL_BR` |
-| `background.cornerRadius` | 统一圆角 |
-| `background.strokeWidth/strokeColor` | 描边宽度与颜色 |
-| `background.clipToOutline` | 是否按背景轮廓裁剪子内容 |
-| `padding` | 一个数或 `[left, top, right, bottom]` |
-| `paddingHorizontal/paddingVertical` | 水平或垂直内边距 |
-| `elevation` | 原生阴影高度 |
-| `alpha` | 0～1 的透明度 |
+| style 字段缺失或为 null | 跳过，应用组件默认样式 |
+| style 类型错误（如 `"style": 42`） | 跳过 |
+| background.color 不是合法颜色（如 `"red"`） | 抛 `NumberFormatException`，被 try/catch 吞掉，背景不变 |
+| gradientColors 少于 2 项 | 退化到纯色填充 |
+| stateStyles 中某个 state 非法 | 跳过该 state，默认态仍有效 |
+| textStyle 值非法 | 忽略，保持 normal |
 
-## 6. 组件属性概览
+### 5.9 JSON style 能做 vs 不能做
 
-所有组件都具有 `id`、`component`，并可使用本库扩展的 `style` 和 `accessibility`。完整可选值、默认值、校验和绑定说明见 [组件属性与样式详细文档](docs/components-and-styling.md)。
+| 能做（style 声明式） | 不能做（必须用 Java Styler） | 原因 |
+| --- | --- | --- |
+| 纯色背景 `background.color` | 加载远程图片当背景 | JSON 协议没有 URL 字段 |
+| 八方向渐变 `gradientColors + gradientOrientation` | 圆形形状 `GradientDrawable.setShape(OVAL)` | style 只能设 `cornerRadius`，无法设形状类型 |
+| 按下/选中/禁用/焦点态背景切换 `stateStyles` | 自定义 Typeface（字体文件） | `Typeface.createFromAsset()` 必须 Java 层 |
+| 圆角/描边（宽度+颜色） | ImageView placeholder / 资源映射 | 需要调用 `getResources().getDrawable()` |
+| padding（四边或水平/垂直） | 动态尺寸（如 `wrap_content` 宽度依赖） | JSON style 不影响 LayoutParams |
+| elevation / alpha | — | — |
+| clipToOutline 裁剪 | — | — |
+| textColor / textSize / textStyle | — | — |
+
+**JSON style 做不到的——必须用原生 Styler**：
+
+| 场景 | 代码 |
+| --- | --- |
+| 加载网络图片当背景（需 FrameLayout 叠 ImageView） | 见 `weather-photo-card` 实现 |
+| 加载原生 vector drawable | 见 `music-previous-icon` |
+| 圆形形状 `setShape(OVAL)` | 见 Avatar 样式 |
+| 自定义字体、字号、文字颜色、粗体 | `((TextView) view).setTypeface(...)` |
+| ImageView placeholder | `context.loadImage(url, view)` |
+
+```java
+a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component, context) -> {
+    FrameLayout card = (FrameLayout) view;
+    ImageView background = new ImageView(this);
+    background.setScaleType(ImageView.ScaleType.FIT_XY);
+    card.addView(background, 0, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    context.loadImage("https://example.com/bg.png", background);
+});
+```
+
+## 7. 组件属性概览
+
+所有组件都具有 `id`、`component`，以及可选的 `accessibility`。完整可选值、默认值、校验和绑定说明见 [组件属性详细文档](docs/components-and-styling.md)。
 
 | 组件 | 主要属性 |
 | --- | --- |
@@ -322,7 +681,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
   </tr>
   <tr>
     <td align="center"><strong>综合表单</strong><br><img src="docs/images/demo-form.png" width="320"></td>
-    <td></td>
+    <td align="center"><strong>Styler 样式展示</strong><br><img src="docs/images/demo-style-showcase.png" width="320"></td>
   </tr>
 </table>
 
@@ -341,6 +700,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | `media_showcase.json` | Image、Icon、Video、AudioPlayer 等媒体组件 |
 | `layout_showcase.json` | Row、Column、List、Card、Tabs、Modal、Divider |
 | `input_controls.json` | TextField 四种变体、ChoicePicker、Slider、CheckBox、DateTimeInput 和 Button |
+| `style_showcase.json` | JSON style 客户端扩展全部能力展示：纯色/渐变背景、八方向、stateStyles（pressed/disabled/checked）、textColor/textSize/textStyle、padding、elevation、描边/圆角 |
 
 Sample 共提供十一个可切换示例，新增三个组件示例合起来覆盖 Basic Catalog 全部 18 类组件。
 

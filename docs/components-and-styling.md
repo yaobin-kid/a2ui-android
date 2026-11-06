@@ -26,7 +26,6 @@ a2uiView.render(json);
 | `component` | string | 组件类型，如 `Text`、`Row`、`Card`。 |
 | `accessibility.label` | string/动态值 | 无障碍标签。 |
 | `accessibility.description` | string/动态值 | 无障碍描述，并在 Android 8.0 及以上作为 tooltip。 |
-| `style` | object | **本库扩展**，声明背景、间距、阴影和透明度，见第 5 节。 |
 
 支持动态值的属性可写为字面量，也可写为：
 
@@ -126,7 +125,7 @@ List 自身已经可滚动，不建议再把它放进同方向的外部滚动容
 | --- | --- | --- |
 | `child` | 组件 ID | 卡片内容。 |
 
-默认为白色、12dp 圆角、16dp 内边距和 3dp 阴影，可通过 `style` 或设置器覆盖。
+默认为白底圆角容器；具体视觉由应用通过 `A2uiComponentStyler` 设置，见第 5 节。
 
 #### Tabs
 
@@ -275,12 +274,7 @@ Card
 {
   "id": "root",
   "component": "Card",
-  "child": "player",
-  "style": {
-    "background": { "color": "#FFFFFFFF", "cornerRadius": 20 },
-    "padding": 16,
-    "elevation": 4
-  }
+  "child": "player"
 }
 ```
 
@@ -323,59 +317,15 @@ a2uiView.setActionListener(action -> {
 
 如果不需要自定义控制区，直接使用 `AudioPlayer` 即可得到系统媒体控制器。
 
-## 5. JSON 背景与通用样式（本库扩展）
+## 5. 协议合规性说明
 
-所有组件均可添加 `style`。尺寸单位是 dp，颜色使用 Android `Color.parseColor` 格式，例如 `#RRGGBB` 或 `#AARRGGBB`。
+A2UI v0.9.1 Basic Catalog 的 schema 对每个组件均声明 `"unevaluatedProperties": false`，这意味着 schema 未定义的字段（如曾经的 `style`）是协议外扩展，客户端应当**静默忽略**而不是解析或报错。
 
-```json
-{
-  "id": "root",
-  "component": "Card",
-  "child": "content",
-  "style": {
-    "background": {
-      "gradientColors": ["#FF6750A4", "#FF3B5BA9"],
-      "gradientOrientation": "TL_BR",
-      "cornerRadius": 20,
-      "strokeWidth": 1,
-      "strokeColor": "#40FFFFFF",
-      "clipToOutline": true
-    },
-    "padding": [16, 20, 16, 20],
-    "elevation": 6,
-    "alpha": 1
-  }
-}
-```
-
-### 5.1 style 属性
-
-| 属性 | 类型 | 说明 |
-| --- | --- | --- |
-| `background` | 颜色字符串或 object | 字符串是纯色简写；对象支持下列背景属性。 |
-| `padding` | number 或四元素数组 | 一个数表示四边相同；数组顺序为 left、top、right、bottom。 |
-| `paddingHorizontal` | number | 覆盖左右内边距。 |
-| `paddingVertical` | number | 覆盖上下内边距。 |
-| `elevation` | number | 原生 View 阴影高度，单位 dp。 |
-| `alpha` | number | 0～1 的透明度。 |
-
-### 5.2 background 对象
-
-| 属性 | 类型/可选值 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `color` | color string | 透明 | 纯色填充；未设置 `gradientColors` 时使用。 |
-| `gradientColors` | color string 数组 | 无 | 至少两种颜色；设置后替代纯色。 |
-| `gradientOrientation` | `TOP_BOTTOM`、`BOTTOM_TOP`、`LEFT_RIGHT`、`RIGHT_LEFT`、`TL_BR`、`BR_TL`、`TR_BL`、`BL_TR` | `TOP_BOTTOM` | 渐变方向。 |
-| `cornerRadius` | number | `0` | 四角统一圆角半径。 |
-| `strokeWidth` | number | `0` | 描边宽度。 |
-| `strokeColor` | color string | 黑色 | 描边颜色。 |
-| `clipToOutline` | boolean | 有圆角时为 true | 是否按背景轮廓裁剪子内容。 |
-
-`style` 应用在组件最外层原生 View 上。例如 TextField、Slider 和 ChoicePicker 的最外层是包含 label 的 Column 容器。
+本库严格遵循协议：JSON 消息只解析协议定义的字段；视觉样式（背景、圆角、padding、阴影、渐变等）完全不通过 JSON 传递，而是通过 Android 原生 `A2uiComponentStyler` 回调在应用层完成。
 
 ## 6. 全局、类型和组件私有样式设置器
 
-声明式 `style` 适合服务端下发；`A2uiComponentStyler` 适合应用精细控制任意原生属性。
+A2UI v0.9.1 协议不包含 `style` 字段。所有视觉定制（背景、圆角、padding、阴影、渐变、图片等）必须通过 Android 原生 `A2uiComponentStyler` 实现。
 
 ```java
 // 1. 全局：没有更具体的设置器时使用。

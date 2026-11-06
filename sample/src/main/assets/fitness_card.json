@@ -1,106 +1,182 @@
 [
-  {
-    "version": "v0.9.1",
-    "createSurface": {
-      "surfaceId": "demo",
-      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
-      "theme": { "primaryColor": "#2E7D32" },
-      "sendDataModel": true
+    {
+        "version":  "v0.9.1",
+        "createSurface":  {
+                              "surfaceId":  "demo",
+                              "catalogId":  "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+                              "theme":  {
+                                            "primaryColor":  "#2E7D32"
+                                        },
+                              "sendDataModel":  true
+                          }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateComponents":  {
+                                 "surfaceId":  "demo",
+                                 "components":  [
+                                                    {
+                                                        "id":  "root",
+                                                        "component":  "Card",
+                                                        "child":  "fitness-layout"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-layout",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "fitness-header",
+                                                                         "fitness-steps",
+                                                                         "fitness-unit",
+                                                                         "fitness-progress",
+                                                                         "fitness-stats",
+                                                                         "fitness-detail"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "fitness-header",
+                                                        "component":  "Row",
+                                                        "justify":  "spaceBetween",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "fitness-title",
+                                                                         "fitness-icon"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "fitness-title",
+                                                        "component":  "Text",
+                                                        "text":  "今日运动",
+                                                        "variant":  "h4"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-icon",
+                                                        "component":  "Icon",
+                                                        "name":  "favorite"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-steps",
+                                                        "component":  "Text",
+                                                        "text":  "8,642",
+                                                        "variant":  "h1"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-unit",
+                                                        "component":  "Text",
+                                                        "text":  "步 · 已完成 86%",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-progress",
+                                                        "component":  "Slider",
+                                                        "label":  "今日目标 10,000 步",
+                                                        "min":  0,
+                                                        "max":  10000,
+                                                        "value":  {
+                                                                      "path":  "/steps"
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "fitness-stats",
+                                                        "component":  "Row",
+                                                        "justify":  "stretch",
+                                                        "children":  [
+                                                                         "fitness-calories",
+                                                                         "fitness-distance",
+                                                                         "fitness-duration"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "fitness-calories",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "fitness-calories-value",
+                                                                         "fitness-calories-label"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "fitness-calories-value",
+                                                        "component":  "Text",
+                                                        "text":  "326",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-calories-label",
+                                                        "component":  "Text",
+                                                        "text":  "千卡",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-distance",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "fitness-distance-value",
+                                                                         "fitness-distance-label"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "fitness-distance-value",
+                                                        "component":  "Text",
+                                                        "text":  "6.2",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-distance-label",
+                                                        "component":  "Text",
+                                                        "text":  "公里",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-duration",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "fitness-duration-value",
+                                                                         "fitness-duration-label"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "fitness-duration-value",
+                                                        "component":  "Text",
+                                                        "text":  "52",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-duration-label",
+                                                        "component":  "Text",
+                                                        "text":  "分钟",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "fitness-detail",
+                                                        "component":  "Button",
+                                                        "variant":  "borderless",
+                                                        "child":  "fitness-detail-text",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "openFitness",
+                                                                                     "context":  {
+                                                                                                     "steps":  8642
+                                                                                                 }
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "fitness-detail-text",
+                                                        "component":  "Text",
+                                                        "text":  "查看运动详情"
+                                                    }
+                                                ]
+                             }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateDataModel":  {
+                                "surfaceId":  "demo",
+                                "value":  {
+                                              "steps":  8642
+                                          }
+                            }
     }
-  },
-  {
-    "version": "v0.9.1",
-    "updateComponents": {
-      "surfaceId": "demo",
-      "components": [
-        {
-          "id": "root",
-          "component": "Card",
-          "child": "fitness-layout",
-          "style": {
-            "background": {
-              "gradientColors": ["#FFE8F5E9", "#FFFFFFFF"],
-              "gradientOrientation": "TL_BR",
-              "cornerRadius": 24
-            },
-            "padding": 20,
-            "elevation": 4
-          }
-        },
-        {
-          "id": "fitness-layout",
-          "component": "Column",
-          "children": ["fitness-header", "fitness-steps", "fitness-unit", "fitness-progress", "fitness-stats", "fitness-detail"]
-        },
-        {
-          "id": "fitness-header",
-          "component": "Row",
-          "justify": "spaceBetween",
-          "align": "center",
-          "children": ["fitness-title", "fitness-icon"]
-        },
-        { "id": "fitness-title", "component": "Text", "text": "今日运动", "variant": "h4" },
-        { "id": "fitness-icon", "component": "Icon", "name": "favorite" },
-        { "id": "fitness-steps", "component": "Text", "text": "8,642", "variant": "h1", "style": { "padding": [0, 10, 0, 0] } },
-        { "id": "fitness-unit", "component": "Text", "text": "步 · 已完成 86%", "variant": "caption" },
-        {
-          "id": "fitness-progress",
-          "component": "Slider",
-          "label": "今日目标 10,000 步",
-          "min": 0,
-          "max": 10000,
-          "value": { "path": "/steps" }
-        },
-        {
-          "id": "fitness-stats",
-          "component": "Row",
-          "justify": "stretch",
-          "children": ["fitness-calories", "fitness-distance", "fitness-duration"],
-          "style": { "padding": [0, 8, 0, 8] }
-        },
-        {
-          "id": "fitness-calories",
-          "component": "Column",
-          "align": "center",
-          "children": ["fitness-calories-value", "fitness-calories-label"],
-          "style": { "background": { "color": "#A5FFFFFF", "cornerRadius": 12 }, "padding": 10 }
-        },
-        { "id": "fitness-calories-value", "component": "Text", "text": "326", "variant": "h5" },
-        { "id": "fitness-calories-label", "component": "Text", "text": "千卡", "variant": "caption" },
-        {
-          "id": "fitness-distance",
-          "component": "Column",
-          "align": "center",
-          "children": ["fitness-distance-value", "fitness-distance-label"],
-          "style": { "background": { "color": "#A5FFFFFF", "cornerRadius": 12 }, "padding": 10 }
-        },
-        { "id": "fitness-distance-value", "component": "Text", "text": "6.2", "variant": "h5" },
-        { "id": "fitness-distance-label", "component": "Text", "text": "公里", "variant": "caption" },
-        {
-          "id": "fitness-duration",
-          "component": "Column",
-          "align": "center",
-          "children": ["fitness-duration-value", "fitness-duration-label"],
-          "style": { "background": { "color": "#A5FFFFFF", "cornerRadius": 12 }, "padding": 10 }
-        },
-        { "id": "fitness-duration-value", "component": "Text", "text": "52", "variant": "h5" },
-        { "id": "fitness-duration-label", "component": "Text", "text": "分钟", "variant": "caption" },
-        {
-          "id": "fitness-detail",
-          "component": "Button",
-          "variant": "borderless",
-          "child": "fitness-detail-text",
-          "action": { "event": { "name": "openFitness", "context": { "steps": 8642 } } }
-        },
-        { "id": "fitness-detail-text", "component": "Text", "text": "查看运动详情" }
-      ]
-    }
-  },
-  {
-    "version": "v0.9.1",
-    "updateDataModel": {
-      "surfaceId": "demo",
-      "value": { "steps": 8642 }
-    }
-  }
 ]

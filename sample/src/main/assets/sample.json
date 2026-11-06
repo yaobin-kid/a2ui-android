@@ -1,90 +1,252 @@
 [
-  {
-    "version": "v0.9.1",
-    "createSurface": {
-      "surfaceId": "main",
-      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
-      "theme": { "primaryColor": "#3F51B5" },
-      "sendDataModel": true
+    {
+        "version":  "v0.9.1",
+        "createSurface":  {
+                              "surfaceId":  "main",
+                              "catalogId":  "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+                              "theme":  {
+                                            "primaryColor":  "#3F51B5"
+                                        },
+                              "sendDataModel":  true
+                          }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateComponents":  {
+                                 "surfaceId":  "main",
+                                 "components":  [
+                                                    {
+                                                        "id":  "root",
+                                                        "component":  "List",
+                                                        "direction":  "vertical",
+                                                        "children":  [
+                                                                         "title",
+                                                                         "subtitle",
+                                                                         "profileCard",
+                                                                         "form",
+                                                                         "productsTitle",
+                                                                         "products"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "title",
+                                                        "component":  "Text",
+                                                        "text":  "A2UI Android",
+                                                        "variant":  "h2"
+                                                    },
+                                                    {
+                                                        "id":  "subtitle",
+                                                        "component":  "Text",
+                                                        "text":  "JSON 驱动的 **原生 UI**",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "profileCard",
+                                                        "component":  "Card",
+                                                        "child":  "profile"
+                                                    },
+                                                    {
+                                                        "id":  "profile",
+                                                        "component":  "Row",
+                                                        "children":  [
+                                                                         "avatar",
+                                                                         "profileText"
+                                                                     ],
+                                                        "align":  "center"
+                                                    },
+                                                    {
+                                                        "id":  "avatar",
+                                                        "component":  "Icon",
+                                                        "name":  "accountCircle"
+                                                    },
+                                                    {
+                                                        "id":  "profileText",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "userName",
+                                                                         "userRole"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "userName",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "/user/name"
+                                                                 },
+                                                        "variant":  "h4"
+                                                    },
+                                                    {
+                                                        "id":  "userRole",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "/user/role"
+                                                                 },
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "form",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "nameField",
+                                                                         "interests",
+                                                                         "guests",
+                                                                         "agreement",
+                                                                         "submit"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "nameField",
+                                                        "component":  "TextField",
+                                                        "label":  "姓名",
+                                                        "value":  {
+                                                                      "path":  "/form/name"
+                                                                  },
+                                                        "variant":  "shortText",
+                                                        "validationRegexp":  ".{2,30}"
+                                                    },
+                                                    {
+                                                        "id":  "interests",
+                                                        "component":  "ChoicePicker",
+                                                        "label":  "兴趣",
+                                                        "variant":  "multipleSelection",
+                                                        "displayStyle":  "chips",
+                                                        "filterable":  true,
+                                                        "options":  [
+                                                                        {
+                                                                            "label":  "Android",
+                                                                            "value":  "android"
+                                                                        },
+                                                                        {
+                                                                            "label":  "AI",
+                                                                            "value":  "ai"
+                                                                        },
+                                                                        {
+                                                                            "label":  "设计",
+                                                                            "value":  "design"
+                                                                        }
+                                                                    ],
+                                                        "value":  {
+                                                                      "path":  "/form/interests"
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "guests",
+                                                        "component":  "Slider",
+                                                        "label":  "人数",
+                                                        "min":  1,
+                                                        "max":  10,
+                                                        "value":  {
+                                                                      "path":  "/form/guests"
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "agreement",
+                                                        "component":  "CheckBox",
+                                                        "label":  "同意用户协议",
+                                                        "value":  {
+                                                                      "path":  "/form/agreed"
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "submit",
+                                                        "component":  "Button",
+                                                        "child":  "submitText",
+                                                        "variant":  "primary",
+                                                        "action":  {
+                                                                       "event":  {
+                                                                                     "name":  "submit",
+                                                                                     "context":  {
+                                                                                                     "name":  {
+                                                                                                                  "path":  "/form/name"
+                                                                                                              },
+                                                                                                     "source":  "android"
+                                                                                                 }
+                                                                                 }
+                                                                   }
+                                                    },
+                                                    {
+                                                        "id":  "submitText",
+                                                        "component":  "Text",
+                                                        "text":  "提交"
+                                                    },
+                                                    {
+                                                        "id":  "productsTitle",
+                                                        "component":  "Text",
+                                                        "text":  "动态列表",
+                                                        "variant":  "h4"
+                                                    },
+                                                    {
+                                                        "id":  "products",
+                                                        "component":  "Column",
+                                                        "children":  {
+                                                                         "path":  "/products",
+                                                                         "componentId":  "productCard"
+                                                                     }
+                                                    },
+                                                    {
+                                                        "id":  "productCard",
+                                                        "component":  "Card",
+                                                        "child":  "productContent"
+                                                    },
+                                                    {
+                                                        "id":  "productContent",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "productName",
+                                                                         "productDescription"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "productName",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "name"
+                                                                 },
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "productDescription",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "description"
+                                                                 },
+                                                        "variant":  "body"
+                                                    }
+                                                ]
+                             }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateDataModel":  {
+                                "surfaceId":  "main",
+                                "value":  {
+                                              "user":  {
+                                                           "name":  "Ada",
+                                                           "role":  "Android Developer"
+                                                       },
+                                              "form":  {
+                                                           "name":  "Ada",
+                                                           "interests":  [
+                                                                             "android"
+                                                                         ],
+                                                           "guests":  2,
+                                                           "agreed":  true
+                                                       },
+                                              "products":  [
+                                                               {
+                                                                   "name":  "声明式 UI",
+                                                                   "description":  "结构由组件 ID 引用组成"
+                                                               },
+                                                               {
+                                                                   "name":  "数据绑定",
+                                                                   "description":  "只更新数据即可刷新界面"
+                                                               },
+                                                               {
+                                                                   "name":  "原生交互",
+                                                                   "description":  "Action 通过回调返回给应用"
+                                                               }
+                                                           ]
+                                          }
+                            }
     }
-  },
-  {
-    "version": "v0.9.1",
-    "updateComponents": {
-      "surfaceId": "main",
-      "components": [
-        { "id": "root", "component": "List", "direction": "vertical", "children": ["title", "subtitle", "profileCard", "form", "productsTitle", "products"] },
-        { "id": "title", "component": "Text", "text": "A2UI Android", "variant": "h2" },
-        { "id": "subtitle", "component": "Text", "text": "JSON 驱动的 **原生 UI**", "variant": "caption" },
-        { "id": "profileCard", "component": "Card", "child": "profile" },
-        { "id": "profile", "component": "Row", "children": ["avatar", "profileText"], "align": "center" },
-        { "id": "avatar", "component": "Icon", "name": "accountCircle" },
-        { "id": "profileText", "component": "Column", "children": ["userName", "userRole"] },
-        { "id": "userName", "component": "Text", "text": { "path": "/user/name" }, "variant": "h4" },
-        { "id": "userRole", "component": "Text", "text": { "path": "/user/role" }, "variant": "caption" },
-        { "id": "form", "component": "Column", "children": ["nameField", "interests", "guests", "agreement", "submit"] },
-        {
-          "id": "nameField",
-          "component": "TextField",
-          "label": "姓名",
-          "value": { "path": "/form/name" },
-          "variant": "shortText",
-          "validationRegexp": ".{2,30}"
-        },
-        {
-          "id": "interests",
-          "component": "ChoicePicker",
-          "label": "兴趣",
-          "variant": "multipleSelection",
-          "displayStyle": "chips",
-          "filterable": true,
-          "options": [
-            { "label": "Android", "value": "android" },
-            { "label": "AI", "value": "ai" },
-            { "label": "设计", "value": "design" }
-          ],
-          "value": { "path": "/form/interests" }
-        },
-        { "id": "guests", "component": "Slider", "label": "人数", "min": 1, "max": 10, "value": { "path": "/form/guests" } },
-        { "id": "agreement", "component": "CheckBox", "label": "同意用户协议", "value": { "path": "/form/agreed" } },
-        {
-          "id": "submit",
-          "component": "Button",
-          "child": "submitText",
-          "variant": "primary",
-          "action": {
-            "event": {
-              "name": "submit",
-              "context": {
-                "name": { "path": "/form/name" },
-                "source": "android"
-              }
-            }
-          }
-        },
-        { "id": "submitText", "component": "Text", "text": "提交" },
-        { "id": "productsTitle", "component": "Text", "text": "动态列表", "variant": "h4" },
-        { "id": "products", "component": "Column", "children": { "path": "/products", "componentId": "productCard" } },
-        { "id": "productCard", "component": "Card", "child": "productContent" },
-        { "id": "productContent", "component": "Column", "children": ["productName", "productDescription"] },
-        { "id": "productName", "component": "Text", "text": { "path": "name" }, "variant": "h5" },
-        { "id": "productDescription", "component": "Text", "text": { "path": "description" }, "variant": "body" }
-      ]
-    }
-  },
-  {
-    "version": "v0.9.1",
-    "updateDataModel": {
-      "surfaceId": "main",
-      "value": {
-        "user": { "name": "Ada", "role": "Android Developer" },
-        "form": { "name": "Ada", "interests": ["android"], "guests": 2, "agreed": true },
-        "products": [
-          { "name": "声明式 UI", "description": "结构由组件 ID 引用组成" },
-          { "name": "数据绑定", "description": "只更新数据即可刷新界面" },
-          { "name": "原生交互", "description": "Action 通过回调返回给应用" }
-        ]
-      }
-    }
-  }
 ]

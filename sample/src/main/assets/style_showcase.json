@@ -1,0 +1,504 @@
+[
+  {
+    "version": "v0.9.1",
+    "createSurface": {
+      "surfaceId": "demo",
+      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+      "theme": {
+        "primaryColor": "#6750A4"
+      },
+      "sendDataModel": true
+    }
+  },
+  {
+    "version": "v0.9.1",
+    "updateComponents": {
+      "surfaceId": "demo",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "justify": "start",
+          "align": "start",
+          "children": [
+            "header",
+            "solid-block",
+            "gradient-block",
+            "card-1",
+            "card-2",
+            "card-3",
+            "button-row",
+            "state-buttons",
+            "avatar-row",
+            "shadow-row"
+          ]
+        },
+        {
+          "id": "header",
+          "component": "Text",
+          "text": "JSON style 客户端扩展",
+          "variant": "h3"
+        },
+        {
+          "id": "solid-block",
+          "component": "Row",
+          "children": [
+            "solid-label"
+          ],
+          "style": {
+            "background": {
+              "color": "#FFE8F5E9",
+              "cornerRadius": 16,
+              "strokeWidth": 1,
+              "strokeColor": "#FF66BB6A"
+            },
+            "padding": [
+              16,
+              10,
+              16,
+              10
+            ]
+          }
+        },
+        {
+          "id": "solid-label",
+          "component": "Text",
+          "text": "纯色 + 圆角 16 + 描边",
+          "variant": "body"
+        },
+        {
+          "id": "gradient-block",
+          "component": "Row",
+          "justify": "center",
+          "align": "center",
+          "children": [
+            "gradient-label"
+          ],
+          "style": {
+            "background": {
+              "gradientColors": [
+                "#FF6750A4",
+                "#FFE91E63",
+                "#FFFF9800"
+              ],
+              "gradientOrientation": "TL_BR",
+              "cornerRadius": 24
+            },
+            "padding": [
+              16,
+              12,
+              16,
+              12
+            ],
+            "clipToOutline": true
+          }
+        },
+        {
+          "id": "gradient-label",
+          "component": "Text",
+          "text": "渐变 TL→BR · 24dp 圆角",
+          "variant": "body"
+        },
+        {
+          "id": "card-1",
+          "component": "Card",
+          "child": "card-1-content",
+          "style": {
+            "background": {
+              "color": "#FFFFF3E0",
+              "cornerRadius": 12,
+              "strokeWidth": 2,
+              "strokeColor": "#FFFF9800"
+            },
+            "padding": [
+              20,
+              14,
+              20,
+              14
+            ],
+            "elevation": 6
+          }
+        },
+        {
+          "id": "card-1-content",
+          "component": "Column",
+          "children": [
+            "card-1-title",
+            "card-1-desc"
+          ]
+        },
+        {
+          "id": "card-1-title",
+          "component": "Text",
+          "text": "橙色描边 + elevation 6",
+          "variant": "h4"
+        },
+        {
+          "id": "card-1-desc",
+          "component": "Text",
+          "text": "background.color / cornerRadius / strokeWidth",
+          "variant": "caption"
+        },
+        {
+          "id": "card-2",
+          "component": "Card",
+          "child": "card-2-content",
+          "style": {
+            "background": {
+              "color": "#FFFFFFFF",
+              "cornerRadius": 16
+            },
+            "padding": [
+              20,
+              16,
+              20,
+              16
+            ],
+            "elevation": 2
+          }
+        },
+        {
+          "id": "card-2-content",
+          "component": "Column",
+          "children": [
+            "card-2-title",
+            "card-2-desc"
+          ]
+        },
+        {
+          "id": "card-2-title",
+          "component": "Text",
+          "text": "纯白 + elevation 2",
+          "variant": "h4"
+        },
+        {
+          "id": "card-2-desc",
+          "component": "Text",
+          "text": "最简洁的 style 声明",
+          "variant": "caption"
+        },
+        {
+          "id": "card-3",
+          "component": "Card",
+          "child": "card-3-content",
+          "style": {
+            "background": {
+              "color": "#FFF5F5F5",
+              "cornerRadius": 16,
+              "strokeWidth": 1,
+              "strokeColor": "#FFE0E0E0"
+            },
+            "padding": [
+              20,
+              16,
+              20,
+              16
+            ]
+          }
+        },
+        {
+          "id": "card-3-content",
+          "component": "Column",
+          "children": [
+            "card-3-title",
+            "card-3-desc"
+          ]
+        },
+        {
+          "id": "card-3-title",
+          "component": "Text",
+          "text": "灰色底描边 · 无 elevation",
+          "variant": "h4"
+        },
+        {
+          "id": "card-3-desc",
+          "component": "Text",
+          "text": "padding: [20,16,20,16] 控制四边",
+          "variant": "caption"
+        },
+        {
+          "id": "button-row",
+          "component": "Row",
+          "justify": "spaceAround",
+          "align": "center",
+          "children": [
+            "btn-primary",
+            "btn-outline",
+            "btn-ghost"
+          ]
+        },
+        {
+          "id": "btn-primary",
+          "component": "Button",
+          "variant": "filled",
+          "child": "btn-primary-text",
+          "action": {
+            "event": {
+              "name": "noop"
+            }
+          },
+          "style": {
+            "background": {
+              "color": "#FF6750A4",
+              "cornerRadius": 24
+            },
+            "padding": [
+              28,
+              12,
+              28,
+              12
+            ],
+            "elevation": 3
+          }
+        },
+        {
+          "id": "btn-primary-text",
+          "component": "Text",
+          "text": "主按钮",
+          "variant": "body"
+        },
+        {
+          "id": "btn-outline",
+          "component": "Button",
+          "variant": "bordered",
+          "child": "btn-outline-text",
+          "action": {
+            "event": {
+              "name": "noop"
+            }
+          },
+          "style": {
+            "background": {
+              "color": "#00000000",
+              "cornerRadius": 24,
+              "strokeWidth": 2,
+              "strokeColor": "#FF6750A4"
+            },
+            "padding": [
+              28,
+              12,
+              28,
+              12
+            ]
+          }
+        },
+        {
+          "id": "btn-outline-text",
+          "component": "Text",
+          "text": "描边按钮",
+          "variant": "body"
+        },
+        {
+          "id": "btn-ghost",
+          "component": "Button",
+          "variant": "borderless",
+          "child": "btn-ghost-text",
+          "action": {
+            "event": {
+              "name": "noop"
+            }
+          },
+          "style": {
+            "padding": [
+              20,
+              12,
+              20,
+              12
+            ],
+            "alpha": 1
+          }
+        },
+        {
+          "id": "btn-ghost-text",
+          "component": "Text",
+          "text": "文字按钮",
+          "variant": "body"
+        },
+        {
+          "id": "state-buttons",
+          "component": "Row",
+          "justify": "spaceAround",
+          "align": "center",
+          "children": ["btn-stateful", "btn-disabled", "btn-text-style"]
+        },
+        {
+          "id": "btn-stateful",
+          "component": "Button",
+          "variant": "filled",
+          "child": "btn-stateful-text",
+          "action": { "event": { "name": "noop" } },
+          "style": {
+            "background": { "color": "#FF2196F3", "cornerRadius": 24 },
+            "stateStyles": {
+              "pressed":  { "color": "#FF1976D2", "cornerRadius": 24 },
+              "disabled": { "color": "#FF90CAF9", "cornerRadius": 24 }
+            },
+            "textColor": "#FFFFFFFF",
+            "textSize": 16,
+            "textStyle": "bold",
+            "padding": [28, 12, 28, 12]
+          }
+        },
+        { "id": "btn-stateful-text", "component": "Text", "text": "按下变暗", "variant": "body" },
+        {
+          "id": "btn-disabled",
+          "component": "Button",
+          "variant": "filled",
+          "child": "btn-disabled-text",
+          "action": { "event": { "name": "noopdisabled" } },
+          "style": {
+            "background": { "gradientColors": ["#FF6750A4", "#FFFF5A98"], "gradientOrientation": "TL_BR", "cornerRadius": 24 },
+            "stateStyles": {
+              "disabled": { "gradientColors": ["#FFBDBDBD", "#FF9E9E9E"], "cornerRadius": 24 },
+              "pressed":  { "gradientColors": ["#FFFF5A98", "#FF6750A4"], "gradientOrientation": "TL_BR", "cornerRadius": 24 }
+            },
+            "textColor": "#FFFFFFFF",
+            "textSize": 14,
+            "padding": [24, 12, 24, 12]
+          }
+        },
+        { "id": "btn-disabled-text", "component": "Text", "text": "渐变按钮(禁用态)", "variant": "body" },
+        {
+          "id": "btn-text-style",
+          "component": "Button",
+          "variant": "bordered",
+          "child": "btn-text-style-text",
+          "action": { "event": { "name": "noop" } },
+          "style": {
+            "background": { "color": "#00000000", "cornerRadius": 12, "strokeWidth": 2, "strokeColor": "#FFE91E63" },
+            "stateStyles": {
+              "pressed": { "color": "#FFE91E63", "cornerRadius": 12, "strokeWidth": 2, "strokeColor": "#FFC2185B" }
+            },
+            "textColor": "#FF001E63",
+            "textSize": 18,
+            "textStyle": "boldItalic",
+            "padding": [20, 10, 20, 10]
+          }
+        },
+        { "id": "btn-text-style-text", "component": "Text", "text": "BoldItalic 18sp", "variant": "body" },
+        {
+          "id": "avatar-row",
+          "component": "Row",
+          "children": [
+            "avatar-1",
+            "avatar-2",
+            "avatar-3"
+          ]
+        },
+        {
+          "id": "avatar-1",
+          "component": "Image",
+          "url": "",
+          "description": "头像 1",
+          "variant": "avatar",
+          "style": {
+            "background": {
+              "color": "#FFE91E63",
+              "cornerRadius": 24,
+              "strokeWidth": 2,
+              "strokeColor": "#FFFFFFFF"
+            }
+          }
+        },
+        {
+          "id": "avatar-2",
+          "component": "Image",
+          "url": "",
+          "description": "头像 2",
+          "variant": "avatar",
+          "style": {
+            "background": {
+              "color": "#FF4CAF50",
+              "cornerRadius": 24,
+              "strokeWidth": 2,
+              "strokeColor": "#FFFFFFFF"
+            }
+          }
+        },
+        {
+          "id": "avatar-3",
+          "component": "Image",
+          "url": "",
+          "description": "头像 3",
+          "variant": "avatar",
+          "style": {
+            "background": {
+              "color": "#FF2196F3",
+              "cornerRadius": 24,
+              "strokeWidth": 2,
+              "strokeColor": "#FFFFFFFF"
+            }
+          }
+        },
+        {
+          "id": "shadow-row",
+          "component": "Row",
+          "justify": "spaceAround",
+          "align": "center",
+          "children": [
+            "shadow-low",
+            "shadow-medium",
+            "shadow-high"
+          ]
+        },
+        {
+          "id": "shadow-low",
+          "component": "Text",
+          "text": "elevation 4",
+          "variant": "body",
+          "style": {
+            "background": {
+              "color": "#FFB3E5FC",
+              "cornerRadius": 8
+            },
+            "padding": [
+              16,
+              10,
+              16,
+              10
+            ],
+            "elevation": 4
+          }
+        },
+        {
+          "id": "shadow-medium",
+          "component": "Text",
+          "text": "elevation 8",
+          "variant": "body",
+          "style": {
+            "background": {
+              "color": "#FF81D4FA",
+              "cornerRadius": 16
+            },
+            "padding": [
+              16,
+              10,
+              16,
+              10
+            ],
+            "elevation": 8
+          }
+        },
+        {
+          "id": "shadow-high",
+          "component": "Text",
+          "text": "elevation 16",
+          "variant": "body",
+          "style": {
+            "background": {
+              "color": "#FF4FC3F7",
+              "cornerRadius": 24
+            },
+            "padding": [
+              16,
+              10,
+              16,
+              10
+            ],
+            "elevation": 16
+          }
+        }
+      ]
+    }
+  }
+]

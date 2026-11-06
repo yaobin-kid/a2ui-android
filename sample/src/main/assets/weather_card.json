@@ -1,122 +1,250 @@
 [
-  {
-    "version": "v0.9.1",
-    "createSurface": {
-      "surfaceId": "demo",
-      "catalogId": "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
-      "theme": { "primaryColor": "#0277BD" },
-      "sendDataModel": true
+    {
+        "version":  "v0.9.1",
+        "createSurface":  {
+                              "surfaceId":  "demo",
+                              "catalogId":  "https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json",
+                              "theme":  {
+                                            "primaryColor":  "#ff0000"
+                                        },
+                              "sendDataModel":  true
+                          }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateComponents":  {
+                                 "surfaceId":  "demo",
+                                 "components":  [
+                                                    {
+                                                        "id":  "root",
+                                                        "component":  "Card",
+                                                        "child":  "weather-layout",
+                                                        "style":  {
+                                                                      "background":  {
+                                                                                         "gradientColors":  [
+                                                                                                               "#FFE1F5FE",
+                                                                                                               "#FFFFFFFF"
+                                                                                                           ],
+                                                                                         "gradientOrientation":  "TOP_BOTTOM",
+                                                                                         "cornerRadius":  24,
+                                                                                         "strokeWidth":  1,
+                                                                                         "strokeColor":  "#FFB3E5FC"
+                                                                                     },
+                                                                      "padding":  [20, 20, 20, 20],
+                                                                      "elevation":  4
+                                                                  }
+                                                    },
+                                                    {
+                                                        "id":  "weather-layout",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "weather-header",
+                                                                         "weather-temp",
+                                                                         "weather-condition",
+                                                                         "weather-metrics",
+                                                                         "weather-divider",
+                                                                         "weather-forecast-title",
+                                                                         "weather-forecast"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-header",
+                                                        "component":  "Row",
+                                                        "justify":  "spaceBetween",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "weather-location",
+                                                                         "weather-icon"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-location",
+                                                        "component":  "Column",
+                                                        "children":  [
+                                                                         "weather-city",
+                                                                         "weather-updated"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-city",
+                                                        "component":  "Text",
+                                                        "text":  "上海市 · 徐汇区",
+                                                        "variant":  "h4"
+                                                    },
+                                                    {
+                                                        "id":  "weather-updated",
+                                                        "component":  "Text",
+                                                        "text":  "今天 14:00 更新",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "weather-icon",
+                                                        "component":  "Icon",
+                                                        "name":  "star"
+                                                    },
+                                                    {
+                                                        "id":  "weather-temp",
+                                                        "component":  "Text",
+                                                        "text":  "26°",
+                                                        "variant":  "h1"
+                                                    },
+                                                    {
+                                                        "id":  "weather-condition",
+                                                        "component":  "Text",
+                                                        "text":  "晴间多云 · 最高 28° / 最低 19°",
+                                                        "variant":  "body"
+                                                    },
+                                                    {
+                                                        "id":  "weather-metrics",
+                                                        "component":  "Row",
+                                                        "justify":  "stretch",
+                                                        "children":  [
+                                                                         "weather-humidity",
+                                                                         "weather-wind",
+                                                                         "weather-aqi"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-humidity",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "weather-humidity-label",
+                                                                         "weather-humidity-value"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-humidity-label",
+                                                        "component":  "Text",
+                                                        "text":  "湿度",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "weather-humidity-value",
+                                                        "component":  "Text",
+                                                        "text":  "48%",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "weather-wind",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "weather-wind-label",
+                                                                         "weather-wind-value"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-wind-label",
+                                                        "component":  "Text",
+                                                        "text":  "东南风",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "weather-wind-value",
+                                                        "component":  "Text",
+                                                        "text":  "3 级",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "weather-aqi",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "weather-aqi-label",
+                                                                         "weather-aqi-value"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-aqi-label",
+                                                        "component":  "Text",
+                                                        "text":  "空气质量",
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "weather-aqi-value",
+                                                        "component":  "Text",
+                                                        "text":  "优",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "weather-divider",
+                                                        "component":  "Divider"
+                                                    },
+                                                    {
+                                                        "id":  "weather-forecast-title",
+                                                        "component":  "Text",
+                                                        "text":  "未来三天",
+                                                        "variant":  "h5"
+                                                    },
+                                                    {
+                                                        "id":  "weather-forecast",
+                                                        "component":  "Row",
+                                                        "justify":  "stretch",
+                                                        "children":  {
+                                                                         "path":  "/forecast",
+                                                                         "componentId":  "weather-forecast-item"
+                                                                     }
+                                                    },
+                                                    {
+                                                        "id":  "weather-forecast-item",
+                                                        "component":  "Column",
+                                                        "align":  "center",
+                                                        "children":  [
+                                                                         "weather-forecast-day",
+                                                                         "weather-forecast-icon",
+                                                                         "weather-forecast-temp"
+                                                                     ]
+                                                    },
+                                                    {
+                                                        "id":  "weather-forecast-day",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "day"
+                                                                 },
+                                                        "variant":  "caption"
+                                                    },
+                                                    {
+                                                        "id":  "weather-forecast-icon",
+                                                        "component":  "Icon",
+                                                        "name":  {
+                                                                     "path":  "icon"
+                                                                 }
+                                                    },
+                                                    {
+                                                        "id":  "weather-forecast-temp",
+                                                        "component":  "Text",
+                                                        "text":  {
+                                                                     "path":  "temp"
+                                                                 },
+                                                        "variant":  "body"
+                                                    }
+                                                ]
+                             }
+    },
+    {
+        "version":  "v0.9.1",
+        "updateDataModel":  {
+                                "surfaceId":  "demo",
+                                "value":  {
+                                              "forecast":  [
+                                                               {
+                                                                   "day":  "周二",
+                                                                   "icon":  "star",
+                                                                   "temp":  "27° / 19°"
+                                                               },
+                                                               {
+                                                                   "day":  "周三",
+                                                                   "icon":  "photo",
+                                                                   "temp":  "24° / 18°"
+                                                               },
+                                                               {
+                                                                   "day":  "周四",
+                                                                   "icon":  "download",
+                                                                   "temp":  "22° / 17°"
+                                                               }
+                                                           ]
+                                          }
+                            }
     }
-  },
-  {
-    "version": "v0.9.1",
-    "updateComponents": {
-      "surfaceId": "demo",
-      "components": [
-        {
-          "id": "root",
-          "component": "Card",
-          "child": "weather-layout",
-          "style": {
-            "background": {
-              "gradientColors": ["#FFE1F5FE", "#FFFFFFFF"],
-              "gradientOrientation": "TOP_BOTTOM",
-              "cornerRadius": 24,
-              "strokeWidth": 1,
-              "strokeColor": "#FFB3E5FC"
-            },
-            "padding": 20,
-            "elevation": 4
-          }
-        },
-        {
-          "id": "weather-layout",
-          "component": "Column",
-          "children": ["weather-header", "weather-temp", "weather-condition", "weather-metrics", "weather-divider", "weather-forecast-title", "weather-forecast"]
-        },
-        {
-          "id": "weather-header",
-          "component": "Row",
-          "justify": "spaceBetween",
-          "align": "center",
-          "children": ["weather-location", "weather-icon"]
-        },
-        { "id": "weather-location", "component": "Column", "children": ["weather-city", "weather-updated"] },
-        { "id": "weather-city", "component": "Text", "text": "上海市 · 徐汇区", "variant": "h4" },
-        { "id": "weather-updated", "component": "Text", "text": "今天 14:00 更新", "variant": "caption" },
-        { "id": "weather-icon", "component": "Icon", "name": "star" },
-        { "id": "weather-temp", "component": "Text", "text": "26°", "variant": "h1" },
-        {
-          "id": "weather-condition",
-          "component": "Text",
-          "text": "晴间多云 · 最高 28° / 最低 19°",
-          "variant": "body",
-          "style": { "padding": [0, 0, 0, 12] }
-        },
-        {
-          "id": "weather-metrics",
-          "component": "Row",
-          "justify": "stretch",
-          "children": ["weather-humidity", "weather-wind", "weather-aqi"]
-        },
-        {
-          "id": "weather-humidity",
-          "component": "Column",
-          "align": "center",
-          "children": ["weather-humidity-label", "weather-humidity-value"],
-          "style": { "background": { "color": "#99FFFFFF", "cornerRadius": 12 }, "padding": 10 }
-        },
-        { "id": "weather-humidity-label", "component": "Text", "text": "湿度", "variant": "caption" },
-        { "id": "weather-humidity-value", "component": "Text", "text": "48%", "variant": "h5" },
-        {
-          "id": "weather-wind",
-          "component": "Column",
-          "align": "center",
-          "children": ["weather-wind-label", "weather-wind-value"],
-          "style": { "background": { "color": "#99FFFFFF", "cornerRadius": 12 }, "padding": 10 }
-        },
-        { "id": "weather-wind-label", "component": "Text", "text": "东南风", "variant": "caption" },
-        { "id": "weather-wind-value", "component": "Text", "text": "3 级", "variant": "h5" },
-        {
-          "id": "weather-aqi",
-          "component": "Column",
-          "align": "center",
-          "children": ["weather-aqi-label", "weather-aqi-value"],
-          "style": { "background": { "color": "#99FFFFFF", "cornerRadius": 12 }, "padding": 10 }
-        },
-        { "id": "weather-aqi-label", "component": "Text", "text": "空气质量", "variant": "caption" },
-        { "id": "weather-aqi-value", "component": "Text", "text": "优", "variant": "h5" },
-        { "id": "weather-divider", "component": "Divider", "style": { "padding": [0, 12, 0, 12] } },
-        { "id": "weather-forecast-title", "component": "Text", "text": "未来三天", "variant": "h5" },
-        {
-          "id": "weather-forecast",
-          "component": "Row",
-          "justify": "stretch",
-          "children": { "path": "/forecast", "componentId": "weather-forecast-item" }
-        },
-        {
-          "id": "weather-forecast-item",
-          "component": "Column",
-          "align": "center",
-          "children": ["weather-forecast-day", "weather-forecast-icon", "weather-forecast-temp"]
-        },
-        { "id": "weather-forecast-day", "component": "Text", "text": { "path": "day" }, "variant": "caption" },
-        { "id": "weather-forecast-icon", "component": "Icon", "name": { "path": "icon" } },
-        { "id": "weather-forecast-temp", "component": "Text", "text": { "path": "temp" }, "variant": "body" }
-      ]
-    }
-  },
-  {
-    "version": "v0.9.1",
-    "updateDataModel": {
-      "surfaceId": "demo",
-      "value": {
-        "forecast": [
-          { "day": "周二", "icon": "star", "temp": "27° / 19°" },
-          { "day": "周三", "icon": "photo", "temp": "24° / 18°" },
-          { "day": "周四", "icon": "download", "temp": "22° / 17°" }
-        ]
-      }
-    }
-  }
 ]
