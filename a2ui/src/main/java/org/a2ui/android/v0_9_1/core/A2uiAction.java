@@ -82,8 +82,26 @@ public final class A2uiAction {
         return context.deepCopy();
     }
 
+    /**
+     * Returns the resolved context as a compact JSON string, e.g.
+     * {@code {"email":"user@example.com","agreed":true}}.
+     * Values referenced via {@code "#/path"} are already replaced with their
+     * actual dataModel values at action construction time.
+     */
+    public String getContextString() {
+        return context.toString();
+    }
+
     public JsonObject getDataModel() {
         return dataModel == null ? null : dataModel.deepCopy();
+    }
+
+    /**
+     * Returns the dataModel snapshot as a compact JSON string, or {@code "null"}
+     * when {@code createSurface.sendDataModel} was false.
+     */
+    public String getDataModelString() {
+        return dataModel == null ? "null" : dataModel.toString();
     }
 
     private static String isoNow() {

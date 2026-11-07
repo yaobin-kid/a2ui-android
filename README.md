@@ -196,12 +196,22 @@ a2uiView.setActionListener(action -> {
     // action.getSourceComponentId() → "submit"
     // action.getContext()       → {"email":"user@example.com","nickname":"kid","agreed":true}
     // action.getDataModel()     → 整个 dataModel 快照（需 createSurface.sendDataModel=true）
+
+    // 方式一：直接拿整个 context 的 JSON 字符串，不关心具体键名
+    String ctxJson = action.getContextString();
+    // ctxJson = {"email":"user@example.com","nickname":"kid","agreed":true}
+    // 可直接转发给后端 / Gson 解析 / 日志打印
+
+    // 方式二：已知键名时逐个取值
     JsonObject ctx = action.getContext();
     String email = ctx.get("email").getAsString();
+
     // 执行业务逻辑：网络请求、页面跳转、Toast……
     // 完成后可发送 updateDataModel 刷新界面
 });
 ```
+
+> 💡 `getContextString()` 返回的 JSON 中，`#/path` 引用已被替换为 dataModel 的实际值，可直接使用，无需二次解析。
 
 #### 3.4.2 functionCall —— 调用内置函数
 
