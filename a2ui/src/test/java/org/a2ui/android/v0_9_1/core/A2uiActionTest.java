@@ -72,4 +72,32 @@ public class A2uiActionTest {
         assertEquals(0, action.toJson().getAsJsonObject("action")
                 .getAsJsonObject("context").entrySet().size());
     }
+
+    @Test
+    public void resolvesHashSlashPointerStringsInEventContext() {
+        A2uiEngine engine = new A2uiEngine(null);
+        engine.accept("{\"version\":\"v0.9.1\",\"createSurface\":{"
+                + "\"surfaceId\":\"s\",\"catalogId\":\"c\",\"sendDataModel\":true}}");
+        engine.accept("{\"version\":\"v0.9.1\",\"updateDataModel\":{"
+                + "\"surfaceId\":\"s\",\"value\":{"
+                + "\"form\":{\"email\":\"user@example.com\",\"nickname\":\"kid\",\"agreed\":true}}}}");
+        SurfaceState surface = engine.getSurface("s");
+
+        JsonObject context = new JsonObject();
+        context.addProperty("email", "#/form/email");
+        context.addProperty("nickname", "#/form/nickname");
+        context.addProperty("agreed", "#/form/agreed");
+        context.addProperty("literal", "hello");
+        JsonObject event = new JsonObject();
+        event.addProperty("name", "submitForm");
+        event.add("context", context);
+        JsonObject definition = new JsonObject();
+        definition.add("event", event);
+
+        A2uiAction action = A2uiAction.fromEvent(surface, "submit", definition, null);
+        assertEquals("user@example.com", action.getContext().get("email").getAsString());
+        assertEquals("kid", action.getContext().get("nickname").getAsString());
+        assertTrue(action.getContext().get("agreed").getAsBoolean());
+        assertEquals("hello", action.getContext().get("literal").getAsString());
+    }
 }

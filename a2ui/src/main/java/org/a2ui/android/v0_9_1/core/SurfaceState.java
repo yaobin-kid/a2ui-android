@@ -63,6 +63,17 @@ public final class SurfaceState {
         if (value == null) {
             return null;
         }
+        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
+            String text = value.getAsString();
+            // JSON Pointer URI fragment: "#/path/to/field" → resolve from dataModel
+            if (text.startsWith("#")) {
+                String pointer = text.substring(1);
+                if (pointer.isEmpty() || pointer.startsWith("/")) {
+                    return getValue(pointer, scope);
+                }
+            }
+            return value.deepCopy();
+        }
         if (!value.isJsonObject()) {
             return value.deepCopy();
         }
@@ -210,7 +221,8 @@ public final class SurfaceState {
             }
             return result;
         }
-        return value.deepCopy();
+        // Primitives (including "#/path" JSON Pointer strings) go through resolve()
+        return resolve(value, scope);
     }
 
     private static String absolutePath(String path, String scope) {

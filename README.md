@@ -323,6 +323,28 @@ JSON 中调用：
 
 渲染时，引擎会取 `dataModel.message` 的值作为文本。如果该路径不存在，返回 `null`，属性按空值处理（不抛异常）。
 
+#### `#/path` 字符串简写（event context / functionCall args 专用）
+
+在 `action.event.context` 和 `action.functionCall.args` 中，除了 `{ "path": "/xxx" }` 对象形式，还可以用更简洁的 **`#/path` 字符串**形式。`#` 后面的部分是 JSON Pointer，引擎会自动替换成 dataModel 中对应路径的当前值：
+
+```json
+{
+  "action": {
+    "event": {
+      "name": "submitForm",
+      "context": {
+        "email": "#/form/email",
+        "agreed": "#/form/agreed"
+      }
+    }
+  }
+}
+```
+
+点击按钮时，`action.getContext().get("email")` 拿到的是 `dataModel.form.email` 的实际值（如 `"user@example.com"`），而不是字符串 `"#/form/email"`。
+
+> 💡 `#/path` 字符串语法**仅用于** event context 和 functionCall args；组件属性（如 `Text.text`）必须用 `{ "path": "/xxx" }` 对象形式。
+
 ### 4.3 updateDataModel 的三种用法
 
 `updateDataModel` 消息体有三个字段：`surfaceId`（必填）、`path`（可选）、`value`（可选）。
