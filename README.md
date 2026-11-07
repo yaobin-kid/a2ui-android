@@ -61,7 +61,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.yaobin-kid:a2ui-android:v0.9.4'
+    implementation 'com.github.yaobin-kid:a2ui-android:v0.9.6'
 }
 ```
 
@@ -1010,8 +1010,8 @@ Sample 共提供十一个可切换示例，新增三个组件示例合起来覆�
 发布 JitPack 时，将包含 `jitpack.yml` 和 `maven-publish` 配置的代码推送到 GitHub，再创建版本标签：
 
 ```bash
-git tag -a v0.9.4 -m "Android renderer v0.9.4 (A2UI v0.9.1)"
-git push origin v0.9.4
+git tag -a v0.9.6 -m "Android renderer v0.9.6 (A2UI v0.9.1)"
+git push origin v0.9.6
 ```
 
 随后可在 [JitPack 构建页面](https://jitpack.io/#yaobin-kid/a2ui-android) 查看版本构建状态。
