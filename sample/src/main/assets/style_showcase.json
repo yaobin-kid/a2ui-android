@@ -48,7 +48,12 @@
           "style": {
             "textSize": 26,
             "textColor": "#FF001E63",
-            "padding": [8, 8, 8, 8]
+            "padding": [
+              8,
+              8,
+              8,
+              8
+            ]
           }
         },
         {
@@ -335,63 +340,148 @@
           "component": "Row",
           "justify": "spaceAround",
           "align": "center",
-          "children": ["btn-stateful", "btn-disabled", "btn-text-style"]
+          "children": [
+            "btn-stateful",
+            "btn-disabled",
+            "btn-text-style"
+          ]
         },
         {
           "id": "btn-stateful",
           "component": "Button",
           "variant": "filled",
           "child": "btn-stateful-text",
-          "action": { "event": { "name": "noop" } },
+          "action": {
+            "event": {
+              "name": "noop"
+            }
+          },
           "style": {
-            "background": { "color": "#FF2196F3", "cornerRadius": 24 },
+            "background": {
+              "color": "#FF2196F3",
+              "cornerRadius": 24
+            },
             "stateStyles": {
-              "pressed":  { "color": "#FF1976D2", "cornerRadius": 24 },
-              "disabled": { "color": "#FF90CAF9", "cornerRadius": 24 }
+              "pressed": {
+                "color": "#FF1976D2",
+                "cornerRadius": 24
+              },
+              "disabled": {
+                "color": "#FF90CAF9",
+                "cornerRadius": 24
+              }
             },
             "textColor": "#FFFFFFFF",
             "textSize": 16,
             "textStyle": "bold",
-            "padding": [28, 12, 28, 12]
+            "padding": [
+              28,
+              12,
+              28,
+              12
+            ]
           }
         },
-        { "id": "btn-stateful-text", "component": "Text", "text": "按下变暗", "variant": "body" },
+        {
+          "id": "btn-stateful-text",
+          "component": "Text",
+          "text": "按下变暗",
+          "variant": "body"
+        },
         {
           "id": "btn-disabled",
           "component": "Button",
           "variant": "filled",
           "child": "btn-disabled-text",
-          "action": { "event": { "name": "noopdisabled" } },
+          "action": {
+            "event": {
+              "name": "noopdisabled"
+            }
+          },
           "style": {
-            "background": { "gradientColors": ["#FF6750A4", "#FFFF5A98"], "gradientOrientation": "TL_BR", "cornerRadius": 24 },
+            "background": {
+              "gradientColors": [
+                "#FF6750A4",
+                "#FFFF5A98"
+              ],
+              "gradientOrientation": "TL_BR",
+              "cornerRadius": 24
+            },
             "stateStyles": {
-              "disabled": { "gradientColors": ["#FFBDBDBD", "#FF9E9E9E"], "cornerRadius": 24 },
-              "pressed":  { "gradientColors": ["#FFFF5A98", "#FF6750A4"], "gradientOrientation": "TL_BR", "cornerRadius": 24 }
+              "disabled": {
+                "gradientColors": [
+                  "#FFBDBDBD",
+                  "#FF9E9E9E"
+                ],
+                "cornerRadius": 24
+              },
+              "pressed": {
+                "gradientColors": [
+                  "#FFFF5A98",
+                  "#FF6750A4"
+                ],
+                "gradientOrientation": "TL_BR",
+                "cornerRadius": 24
+              }
             },
             "textColor": "#FFFFFFFF",
             "textSize": 14,
-            "padding": [24, 12, 24, 12]
+            "padding": [
+              24,
+              12,
+              24,
+              12
+            ]
           }
         },
-        { "id": "btn-disabled-text", "component": "Text", "text": "渐变按钮(禁用态)", "variant": "body" },
+        {
+          "id": "btn-disabled-text",
+          "component": "Text",
+          "text": "渐变按钮(禁用态)",
+          "variant": "body"
+        },
         {
           "id": "btn-text-style",
           "component": "Button",
           "variant": "bordered",
           "child": "btn-text-style-text",
-          "action": { "event": { "name": "noop" } },
+          "action": {
+            "event": {
+              "name": "noop"
+            }
+          },
           "style": {
-            "background": { "color": "#00000000", "cornerRadius": 12, "strokeWidth": 2, "strokeColor": "#FFE91E63" },
+            "background": {
+              "color": "#00000000",
+              "cornerRadius": 12,
+              "strokeWidth": 2,
+              "strokeColor": "#FFE91E63"
+            },
             "stateStyles": {
-              "pressed": { "color": "#FFE91E63", "cornerRadius": 12, "strokeWidth": 2, "strokeColor": "#FFC2185B" }
+              "pressed": {
+                "color": "#FFE91E63",
+                "cornerRadius": 12,
+                "strokeWidth": 2,
+                "strokeColor": "#FFC2185B"
+              }
             },
             "textColor": "#FF001E63",
             "textSize": 18,
             "textStyle": "boldItalic",
-            "padding": [20, 10, 20, 10]
+            "padding": [
+              20,
+              10,
+              20,
+              10
+            ]
           }
         },
-        { "id": "btn-text-style-text", "component": "Text", "text": "BoldItalic 18sp", "variant": "body" },
+        {
+          "id": "btn-text-style-text",
+          "component": "Text",
+          "text": "BoldItalic 18sp",
+          "variant": "body"
+        },
         {
           "id": "avatar-row",
           "component": "Row",
