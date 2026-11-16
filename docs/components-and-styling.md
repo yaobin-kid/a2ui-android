@@ -124,6 +124,18 @@ List 自身已经可滚动，不建议再把它放进同方向的外部滚动容
 | 属性 | 类型 | 说明 |
 | --- | --- | --- |
 | `child` | 组件 ID | 卡片内容。 |
+| `backgroundImage` | string / object | 可选卡片背景图，支持网络地址。 |
+
+`backgroundImage` 为字符串时只指定图片地址；为对象时支持 `url` 与 `fit`：
+
+```json
+"backgroundImage": {
+  "url": "https://example.com/cover.png",
+  "fit": "fill"
+}
+```
+
+`fit` 取值与 Image 组件一致：`fill`（默认，宽高同步拉伸铺满整个卡片）、`cover`（等比放大铺满并裁剪溢出）、`contain`/`scaleDown`（等比完整显示）、`none`（居中不缩放）。背景图始终绘制在内容下方；卡片背景有圆角时，背景图也会被裁剪成同样的圆角。
 
 默认为白底圆角容器；具体视觉由应用通过 `A2uiComponentStyler` 设置，见第 5 节。
 

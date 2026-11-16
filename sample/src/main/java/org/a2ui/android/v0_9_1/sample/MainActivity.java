@@ -2,14 +2,11 @@ package org.a2ui.android.v0_9_1.sample;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -138,27 +135,6 @@ public class MainActivity extends Activity {
             cover.setScaleType(ImageView.ScaleType.CENTER);
         });
 
-        // ===== weather-image-card：FrameLayout 叠 ImageView 加载网络图片 =====
-        // JSON style 只能设置背景色/渐变，加载远程图片当背景需要原生 Layer
-        a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component, context) -> {
-            FrameLayout card = (FrameLayout) view;
-            GradientDrawable mask = new GradientDrawable();
-            mask.setColors(new int[]{0xCC000000, 0x66000000});
-            mask.setCornerRadius(dp(24));
-            ImageView background = new ImageView(this);
-            background.setScaleType(ImageView.ScaleType.FIT_XY);
-            background.setBackground(mask);
-            background.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            card.setClipToPadding(false);
-            card.addView(background, 0, params);
-            card.addOnLayoutChangeListener((v, left, top, right, bottom,
-                    oldLeft, oldTop, oldRight, oldBottom) ->
-                    background.layout(0, 0, right - left, bottom - top));
-            String url = "https://sslcdn.lifex360.com/icon/2026/07/7abvzteswetomhnej2eq.png";
-            context.loadImage(url, background);
-        });
     }
 
     private void handleAction(A2uiAction action) {

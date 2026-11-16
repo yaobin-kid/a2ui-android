@@ -25,7 +25,16 @@
         {
           "id": "weather-photo-card",
           "component": "Card",
-          "child": "weather-layout"
+          "child": "weather-layout",
+          "backgroundImage": {
+            "url": "https://sslcdn.lifex360.com/icon/2026/07/7abvzteswetomhnej2eq.png",
+            "fit": "fill"
+          },
+          "style": {
+            "background": {
+              "cornerRadius": 24
+            }
+          }
         },
         {
           "id": "weather-layout",

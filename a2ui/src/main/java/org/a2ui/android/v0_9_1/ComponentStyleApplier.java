@@ -89,7 +89,7 @@ final class ComponentStyleApplier {
             boolean hasRadius = style.has("background")
                     && style.get("background").isJsonObject()
                     && style.getAsJsonObject("background").has("cornerRadius");
-            boolean clip = BasicCatalogRenderer.bool(context,
+            boolean clip = RenderSupport.bool(context,
                     style.has("clipToOutline") ? style.get("clipToOutline") : null,
                     hasRadius);
             if (clip) view.setClipToOutline(true);
@@ -120,11 +120,11 @@ final class ComponentStyleApplier {
                     parsed[i] = Color.parseColor(colors.get(i).getAsString());
                 }
                 drawable.setColors(parsed);
-                drawable.setOrientation(orientation(BasicCatalogRenderer.optString(
+                drawable.setOrientation(orientation(RenderSupport.optString(
                         definition, "gradientOrientation", "TOP_BOTTOM")));
             }
         } else {
-            drawable.setColor(Color.parseColor(BasicCatalogRenderer.optString(
+            drawable.setColor(Color.parseColor(RenderSupport.optString(
                     definition, "color", "#00000000")));
         }
         float radius = definition.has("cornerRadius")
@@ -135,7 +135,7 @@ final class ComponentStyleApplier {
         int strokeWidth = definition.has("strokeWidth")
                 ? Math.round(dp(context, definition.get("strokeWidth"))) : 0;
         if (strokeWidth > 0) {
-            drawable.setStroke(strokeWidth, Color.parseColor(BasicCatalogRenderer.optString(
+            drawable.setStroke(strokeWidth, Color.parseColor(RenderSupport.optString(
                     definition, "strokeColor", "#FF000000")));
         }
         return drawable;
