@@ -1,6 +1,7 @@
 package org.a2ui.android.v0_9_1;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ final class CardRenderer implements A2uiComponentRenderer {
         card.setElevation(RenderSupport.dp(context, 3));
         int padding = RenderSupport.dp(context, 16);
         card.setPadding(padding, padding, padding, padding);
+        // clipToOutline 会按卡片背景轮廓（含圆角）裁剪 onDraw 中绘制的背景图
         card.setClipToOutline(true);
         addBackgroundImage(context, component, card);
         View child = context.renderChild(RenderSupport.requiredId(component, "child"));
@@ -31,13 +33,18 @@ final class CardRenderer implements A2uiComponentRenderer {
     }
 
     /**
-     * backgroundImage 支持字符串（仅图片地址）或对象：
+     * style.background.image 支持字符串（仅图片地址）或对象：
      * {@code {"url": "https://...", "fit": "fill|cover|contain|scaleDown|none"}}。
-     * 默认 fill（宽高同步拉伸），铺满整个卡片；圆角由卡片背景轮廓裁剪。
+     * 默认 fill（宽高同步拉伸），铺满整个卡片；卡片是圆角时背景图同步裁剪成圆角。
      */
     private static void addBackgroundImage(A2uiRenderContext context, JsonObject component,
                                            CardBackgroundLayout card) {
-        JsonElement definition = component.get("backgroundImage");
+        JsonObject style = component.getAsJsonObject("style");
+        JsonElement background = style == null ? null : style.get("background");
+        if (background == null || !background.isJsonObject()) {
+            return;
+        }
+        JsonElement definition = background.getAsJsonObject().get("image");
         if (definition == null || definition.isJsonNull()) {
             return;
         }
@@ -55,12 +62,20 @@ final class CardRenderer implements A2uiComponentRenderer {
         if (url.trim().isEmpty()) {
             return;
         }
-        ImageView image = new ImageView(context.getContext());
+        ImageView image = new ImageView(context.getContext()) {
+            @Override
+            public void setImageDrawable(Drawable drawable) {
+                super.setImageDrawable(drawable);
+                // 图片异步加载完成：0 尺寸子 View 自身不会触发父级重绘，这里显式让卡片重绘
+                card.invalidate();
+            }
+        };
         image.setScaleType(scaleType(fit));
         image.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-        // 0×0 的布局参数让背景图不参与卡片尺寸计算，由 CardBackgroundLayout 在测量后铺满卡片。
+        // 0×0 布局参数：图片不参与布局、也不作为子 View 直接绘制，
+        // 只作为图片加载的载体，由 CardBackgroundLayout 在 onDraw 中按卡片尺寸铺满绘制。
         card.addView(image, 0, new FrameLayout.LayoutParams(0, 0));
-        card.setBackgroundView(image);
+        card.setBackgroundImage(image);
         context.loadImage(url, image);
     }
 

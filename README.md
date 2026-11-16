@@ -676,7 +676,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | 组件 | background | stateStyles | textColor/textSize/textStyle | padding | elevation | 备注 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Button | ✅ | ✅ 支持 pressed/disabled/checked/focused | ✅ 递归应用到子 TextView | ✅ | ✅ | variant 为 `filled`/`bordered`/`borderless` 时会叠加 ripple，`stateStyles.pressed` 可覆盖 |
-| Card | ✅ | ✅ | — | ✅ | ✅ | 最外层容器 |
+| Card | ✅ | ✅ | — | ✅ | ✅ | 最外层容器；额外支持 `background.image` 网络背景图 |
 | Row / Column | ✅ | — | — | ✅ | ✅ | 布局容器 |
 | Text | ✅ | — | ✅ 自身即是 TextView | ✅ | ✅ | textColor 会覆盖默认文字色 |
 | TextField | ✅ | ✅ disabled | — | ✅ | ✅ | 背景加在 TextInputLayout，颜色应用到子 EditText |
@@ -728,6 +728,7 @@ Sample 的 `weather_image_card.json` 演示了整卡网络图片背景：为 `we
 | `gradientColors` | color string 数组 | 无 | 至少 **2 种**颜色；设置后替代纯色。所有数组元素必须是有效的 `#RRGGBB` 或 `#AARRGGBB` |
 | `gradientOrientation` | 八方向枚举 | `"TOP_BOTTOM"` | 见下方枚举表 |
 | `cornerRadius` | number | `0` | 四角**统一**圆角半径（dp）。当前不支持四角分别设置不同半径 |
+| `image` | string 或 object | 无 | **仅 Card**：背景层网络图片，绘制在颜色/渐变之上、内容之下。详见 [6.6.6](#666-card-背景图stylebackgroundimage) |
 | `strokeWidth` | number | `0` | 描边宽度（dp）。>0 时显示描边 |
 | `strokeColor` | color string | `"#FF000000"`（黑色） | 描边颜色 |
 | `clipToOutline` | boolean | 有圆角时自动 true | 是否按圆角轮廓裁剪子内容（如 Image 超出圆角区域） |
@@ -860,6 +861,66 @@ stateStyles 的每个状态值可以是**颜色字符串简写**，不必写完�
 }
 ```
 
+#### 6.6.6 Card 背景图（style.background.image）
+
+`Card` 支持在背景层叠加一张**网络图片**。背景图与 `color` / `gradientColors` 同属一个 `background` 对象：
+
+```json
+{
+  "id": "photo-card",
+  "component": "Card",
+  "child": "card-content",
+  "style": {
+    "background": {
+      "cornerRadius": 24,
+      "gradientColors": ["#FFFF0000", "#FF00FF00"],
+      "image": {
+        "url": "https://example.com/cover.png",
+        "fit": "cover"
+      }
+    }
+  }
+}
+```
+
+`image` 有两种写法：
+
+| 写法 | 示例 | 说明 |
+| --- | --- | --- |
+| 字符串简写 | `"image": "https://example.com/cover.png"` | 等价于只设置 `url`，`fit` 使用默认值 `fill` |
+| 对象 | `"image": { "url": "...", "fit": "cover" }` | 完整写法 |
+
+**属性：**
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `url` | string | 无（必填） | 图片地址，支持 `http://` / `https://`；也支持数据绑定对象（如 `{ "path": "/coverUrl" }`），由数据模型提供 |
+| `fit` | enum | `"fill"` | 图片缩放方式，取值见下表 |
+
+| `fit` 值 | ImageView.ScaleType | 效果 |
+| --- | --- | --- |
+| `fill`（默认） | `FIT_XY` | 宽、高分别拉伸到卡片尺寸，**必定铺满**，可能变形 |
+| `cover` | `CENTER_CROP` | 等比放大直到覆盖整个卡片，超出部分被裁剪，不变形 |
+| `contain` / `scaleDown` | `FIT_CENTER` | 等比缩小到完整显示，可能留白（露出背景色/渐变） |
+| `none` | `CENTER` | 原始大小居中，不缩放 |
+
+**绘制与布局规则：**
+
+1. 背景图**不参与卡片尺寸计算**。卡片宽高仍由 `child` 内容和 `style.padding` 决定，图片不会把卡片撑大、也不会按图片比例改变卡片尺寸。
+2. 绘制顺序为：`background` 的颜色/渐变 → **背景图** → 卡片内容（`child`）。图片会完全盖住颜色/渐变（除非图片本身有透明或留白），文字/图标等内容始终显示在图片之上。
+3. 背景图绘制在卡片的**完整区域**上，包含 `padding`（Card 默认 16dp 内边距）。不需要为背景图额外设置 padding 或负 margin。
+4. 卡片有圆角时（`background.cornerRadius > 0`），背景图按**相同半径**裁剪，四个角都会裁圆；`cornerRadius` 为 `0` 时为直角。
+5. 图片的**透明像素会透出** `background` 的颜色/渐变。例如四周留白的 PNG 在 `fill` 下仍会看到背景色；想视觉上完全覆盖，请用 `cover` 或改用不透明图片。
+6. 该属性**只在 `Card` 上生效**，其他组件的 `style.background.image` 会被忽略。
+
+**加载行为：**
+
+- 异步下载并写入内存 LruCache（同一 URL 只下载一次），下载完成后自动重绘卡片。
+- 加载失败（网络错误、404、超时）时**静默失败**：保留 `color` / `gradientColors` 背景，不抛异常，不影响其他组件。
+- 默认使用库内置的 `DefaultImageLoader`（`HttpURLConnection` + `LruCache`）；可通过 `a2uiView.setImageLoader(...)` 替换为 Glide / Coil 等实现。
+- 宿主 App 需要 `INTERNET` 权限。建议图片分辨率与卡片实际尺寸接近，避免超大图占用过多内存。
+- JSON `style` 先应用，`registerComponentStyler` 后执行；若同一个 Card 既声明了 `background.image`、又用 Styler 修改了背景，以 Styler 的结果为准。
+
 ### 6.7 优先级与执行顺序
 
 ```
@@ -892,11 +953,12 @@ style 是客户端扩展。以下情况**不会抛异常**，组件正常渲染�
 
 | 能做（style 声明式） | 不能做（必须用 Java Styler） | 原因 |
 | --- | --- | --- |
-| 纯色背景 `background.color` | 加载远程图片当背景 | JSON 协议没有 URL 字段 |
+| 纯色背景 `background.color` | 自定义 Typeface（字体文件） | `Typeface.createFromAsset()` 必须 Java 层 |
+| Card 网络背景图 `background.image`（`url` + `fit`） | ImageView placeholder / 资源映射 | 需要调用 `getResources().getDrawable()` |
 | 八方向渐变 `gradientColors + gradientOrientation` | 圆形形状 `GradientDrawable.setShape(OVAL)` | style 只能设 `cornerRadius`，无法设形状类型 |
-| 按下/选中/禁用/焦点态背景切换 `stateStyles` | 自定义 Typeface（字体文件） | `Typeface.createFromAsset()` 必须 Java 层 |
-| 圆角/描边（宽度+颜色） | ImageView placeholder / 资源映射 | 需要调用 `getResources().getDrawable()` |
-| padding（四边或水平/垂直） | 动态尺寸（如 `wrap_content` 宽度依赖） | JSON style 不影响 LayoutParams |
+| 按下/选中/禁用/焦点态背景切换 `stateStyles` | 动态尺寸（如 `wrap_content` 宽度依赖） | JSON style 不影响 LayoutParams |
+| 圆角/描边（宽度+颜色）；背景图按圆角裁剪 | — | — |
+| padding（四边或水平/垂直） | — | — |
 | elevation / alpha | — | — |
 | clipToOutline 裁剪 | — | — |
 | textColor / textSize / textStyle | — | — |
@@ -905,20 +967,18 @@ style 是客户端扩展。以下情况**不会抛异常**，组件正常渲染�
 
 | 场景 | 代码 |
 | --- | --- |
-| 加载网络图片当背景（需 FrameLayout 叠 ImageView） | 见 `weather-photo-card` 实现 |
 | 加载原生 vector drawable | 见 `music-previous-icon` |
 | 圆形形状 `setShape(OVAL)` | 见 Avatar 样式 |
 | 自定义字体、字号、文字颜色、粗体 | `((TextView) view).setTypeface(...)` |
-| ImageView placeholder | `context.loadImage(url, view)` |
+| ImageView placeholder（图片加载中/失败态） | `context.loadImage(url, view)` |
 
 ```java
-a2uiView.registerComponentStyler("demo", "weather-photo-card", (view, component, context) -> {
-    FrameLayout card = (FrameLayout) view;
-    ImageView background = new ImageView(this);
-    background.setScaleType(ImageView.ScaleType.FIT_XY);
-    card.addView(background, 0, new FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    context.loadImage("https://example.com/bg.png", background);
+// 只有需要"图片加载中/失败占位"这类原生能力时才需要 Styler；
+// 单纯给 Card 加网络背景图直接用 JSON：style.background.image
+a2uiView.registerComponentStyler("demo", "music-cover", (view, component, context) -> {
+    ImageView cover = (ImageView) view;
+    cover.setImageResource(R.drawable.ic_play_arrow);
+    cover.setScaleType(ImageView.ScaleType.CENTER);
 });
 ```
 
